@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ResourceCard from '../ResourceCard/ResourceCard';
 import PreviewModal from '../PreviewModal/PreviewModal';
 import FeedbackForm from '../FeedbackForm/FeedbackForm';
+import ScrollReveal from '../motion/ScrollReveal';
 import { RESOURCES } from '../../data/mockData';
 import './FeaturedResources.css';
 
@@ -18,33 +19,37 @@ export default function FeaturedResources() {
     <section className="featured-resources">
       <div className="container">
         {/* Section header */}
-        <div className="featured-resources__header">
-          <div>
-            <span className="featured-resources__eyebrow">⭐ Curated for You</span>
-            <h2 className="featured-resources__title">Featured Resources</h2>
-            <p className="featured-resources__sub">
-              Hand-picked by our editorial team — the most impactful materials in every category.
-            </p>
+        <ScrollReveal variant="fade-up">
+          <div className="featured-resources__header">
+            <div>
+              <span className="featured-resources__eyebrow">⭐ Curated for You</span>
+              <h2 className="featured-resources__title">Featured Resources</h2>
+              <p className="featured-resources__sub">
+                Hand-picked by our editorial team — the most impactful materials in every category.
+              </p>
+            </div>
+            <button
+              className="btn btn--outline btn--sm featured-resources__view-all"
+              onClick={() => navigate('/home')}
+            >
+              View all →
+            </button>
           </div>
-          <button
-            className="btn btn--outline btn--sm featured-resources__view-all"
-            onClick={() => navigate('/home')}
-          >
-            View all →
-          </button>
-        </div>
+        </ScrollReveal>
 
         {/* Card grid */}
-        <div className="featured-resources__grid">
-          {FEATURED.map(r => (
-            <ResourceCard
-              key={r.id}
-              resource={r}
-              onPreview={setPreviewResource}
-              onFeedback={setFeedbackResource}
-            />
-          ))}
-        </div>
+        <ScrollReveal variant="fade-up" delay={80}>
+          <div className="featured-resources__grid">
+            {FEATURED.map(r => (
+              <ResourceCard
+                key={r.id}
+                resource={r}
+                onPreview={setPreviewResource}
+                onFeedback={setFeedbackResource}
+              />
+            ))}
+          </div>
+        </ScrollReveal>
       </div>
 
       {previewResource && (

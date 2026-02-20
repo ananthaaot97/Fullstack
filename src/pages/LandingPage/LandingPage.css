@@ -395,3 +395,45 @@
   .landing__steps { gap: 2rem; }
   .landing__cta-banner-inner { justify-content: center; text-align: center; }
 }
+
+/* ── Hero entrance animations ── */
+@keyframes lh-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .landing__hero-badge    { animation: lh-fade-up 600ms ease-out both; animation-delay:   0ms; }
+  .landing__hero-title    { animation: lh-fade-up 620ms ease-out both; animation-delay: 110ms; }
+  .landing__hero-subtitle { animation: lh-fade-up 620ms ease-out both; animation-delay: 220ms; }
+  .landing__hero-actions  { animation: lh-fade-up 620ms ease-out both; animation-delay: 340ms; }
+  .landing__hero-stats    { animation: lh-fade-up 620ms ease-out both; animation-delay: 480ms; }
+}
+
+/* ── Dark mode – hero gradient depth ── */
+[data-theme="dark"] .landing__hero {
+  background: linear-gradient(140deg, #060e26 0%, #112266 55%, #0b5ca8 100%);
+}
+
+/* Subtle inner glow layer for depth in dark mode */
+[data-theme="dark"] .landing__hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 40%, rgba(96, 165, 250, 0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* ── Dark mode – section/card overrides ── */
+[data-theme="dark"] .landing__feature-card { background: var(--color-surface); }
+[data-theme="dark"] .landing__testimonial-card { background: var(--color-surface); }
+[data-theme="dark"] .landing__how { background: var(--color-surface); }
+[data-theme="dark"] .landing__cta-banner {
+  background: linear-gradient(135deg, #06112a, #1a3a8a);
+}

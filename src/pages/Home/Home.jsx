@@ -6,6 +6,7 @@ import PreviewModal from '../../components/PreviewModal/PreviewModal';
 import FeedbackForm from '../../components/FeedbackForm/FeedbackForm';
 import PopularResources from '../../components/PopularResources/PopularResources';
 import FeaturedResources from '../../components/FeaturedResources/FeaturedResources';
+import ScrollReveal from '../../components/motion/ScrollReveal';
 import { RESOURCES } from '../../data/mockData';
 import './Home.css';
 
@@ -50,20 +51,25 @@ export default function Home() {
 
       {/* ── Featured Resources (only when not actively filtering) ── */}
       {!search && category === 'all' && (
-        <FeaturedResources />
+        <ScrollReveal variant="fade-up">
+          <FeaturedResources />
+        </ScrollReveal>
       )}
 
       {/* ── Popular Resources (only when not actively filtering) ── */}
       {!search && category === 'all' && (
-        <section className="home__popular-wrap">
-          <div className="container">
-            <PopularResources />
-          </div>
-        </section>
+        <ScrollReveal variant="fade-up" delay={60}>
+          <section className="home__popular-wrap">
+            <div className="container">
+              <PopularResources />
+            </div>
+          </section>
+        </ScrollReveal>
       )}
 
       {/* ── Resource Grid ── */}
-      <section className="home__grid-section">
+      <ScrollReveal variant="fade-up" delay={80}>
+        <section className="home__grid-section">
         <div className="container">
           <div className="home__grid-header">
             <h2 className="section-title">
@@ -105,6 +111,7 @@ export default function Home() {
           )}
         </div>
       </section>
+      </ScrollReveal>
 
       {previewResource && (
         <PreviewModal resource={previewResource} onClose={() => setPreviewResource(null)} />
