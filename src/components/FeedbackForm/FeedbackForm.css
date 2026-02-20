@@ -1,0 +1,59 @@
+/* FeedbackForm (reuses modal styles + specifics) */
+.feedback-modal { max-width: 520px; }
+
+.feedback-modal__header {
+  padding: 1.75rem 1.75rem 1rem;
+}
+.feedback-modal__header h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.3rem; }
+.feedback-modal__header p { font-size: 0.9rem; color: var(--color-text-muted); }
+
+.feedback-modal__form { padding: 0 1.75rem 1.75rem; display: flex; flex-direction: column; gap: 1.1rem; }
+
+/* Form elements */
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.form-label { font-size: 0.85rem; font-weight: 600; color: var(--color-text); }
+
+.required { color: var(--color-danger); }
+
+.form-input {
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.9rem;
+  font-size: 0.92rem;
+  color: var(--color-text);
+  background: var(--color-surface);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  outline: none;
+  width: 100%;
+}
+.form-input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(26,86,219,.1); }
+
+.form-textarea { resize: vertical; min-height: 110px; }
+.form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.6rem center; background-size: 1.2em; padding-right: 2rem; }
+
+/* Star rating */
+.star-rating { display: flex; align-items: center; gap: 0.25rem; }
+.star-btn { background: transparent; border: none; font-size: 1.8rem; color: var(--color-border); cursor: pointer; transition: color var(--transition), transform var(--transition); line-height: 1; }
+.star-btn.filled { color: var(--color-accent); }
+.star-btn:hover { transform: scale(1.2); }
+.star-label { font-size: 0.85rem; color: var(--color-text-muted); margin-left: 0.5rem; }
+
+.feedback-modal__footer {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+.feedback-modal__footer .btn { flex: 1; }
+
+.feedback-modal__success {
+  text-align: center;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.feedback-modal__success-icon { font-size: 3.5rem; }
+.feedback-modal__success h2 { font-size: 1.35rem; font-weight: 700; }
+.feedback-modal__success p { color: var(--color-text-muted); font-size: 0.92rem; max-width: 280px; }
