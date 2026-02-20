@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react';
-import HeroSection from '../../components/HeroSection/HeroSection';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
 import ResourceCard from '../../components/ResourceCard/ResourceCard';
@@ -25,24 +24,44 @@ export default function Home() {
 
   return (
     <main className="home">
-      <HeroSection />
-
-      {/* Search & Filter bar */}
-      <section className="home__filter-bar">
-        <div className="container home__filter-inner">
-          <SearchBar value={search} onChange={setSearch} placeholder="Search by title, author or tag…" />
-          <CategoryFilter active={category} onSelect={setCategory} />
+      {/* ── Prominent Search Header ── */}
+      <section className="home__search-header">
+        <div className="container">
+          <h1 className="home__search-title">Browse the Library</h1>
+          <p className="home__search-sub">
+            Search by title, author or topic — then filter by category.
+          </p>
+          <div className="home__search-bar-wrap">
+            <SearchBar
+              value={search}
+              onChange={setSearch}
+              placeholder="Search by title, author or tag…"
+            />
+          </div>
+          <div className="home__chips-wrap">
+            <CategoryFilter active={category} onSelect={setCategory} />
+          </div>
         </div>
       </section>
 
-      {/* Resource Grid */}
+      {/* ── Resource Grid ── */}
       <section className="home__grid-section">
         <div className="container">
           <div className="home__grid-header">
             <h2 className="section-title">
-              {category === 'all' ? 'All Resources' : `${RESOURCES.find(r => r.category === category)?.categoryLabel || category}s`}
+              {category === 'all'
+                ? 'All Resources'
+                : `${RESOURCES.find(r => r.category === category)?.categoryLabel || category}s`}
               <span className="section-count">{filtered.length} found</span>
             </h2>
+            {search && (
+              <button
+                className="home__clear-btn"
+                onClick={() => { setSearch(''); setCategory('all'); }}
+              >
+                ✕ Clear filters
+              </button>
+            )}
           </div>
 
           {filtered.length > 0 ? (

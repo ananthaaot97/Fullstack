@@ -41,24 +41,45 @@
 .navbar__links {
   display: flex;
   list-style: none;
-  gap: 0.25rem;
+  gap: 0.1rem;
   margin-left: auto;
 }
 
 .navbar__links a {
-  display: inline-block;
-  padding: 0.4rem 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 1rem;
   border-radius: var(--radius-md);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--color-text-muted);
   transition: color var(--transition), background var(--transition);
+  letter-spacing: 0.01em;
+  position: relative;
 }
 
-.navbar__links a:hover,
+.navbar__links a:hover {
+  color: var(--color-primary);
+  background: #eff6ff;
+}
+
+/* Active tab: blue text + bottom border indicator */
 .navbar__links a.active {
   color: var(--color-primary);
-  background: #dbeafe;
+  font-weight: 600;
+  background: transparent;
+}
+
+.navbar__links a.active::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  background: var(--color-primary);
+  border-radius: 2px;
 }
 
 /* Auth area */
@@ -67,6 +88,9 @@
   align-items: center;
   gap: 0.5rem;
   flex-shrink: 0;
+  margin-left: 1rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--color-border);
 }
 
 .navbar__user {

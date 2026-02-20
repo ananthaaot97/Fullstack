@@ -36,7 +36,7 @@ export default function Navbar() {
 
         {/* Desktop nav links */}
         <ul className="navbar__links">
-          <li><NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>Home</NavLink></li>
+          <li><NavLink to="/home" className={({ isActive }) => isActive ? 'active' : ''}>Home</NavLink></li>
           <li><NavLink to="/categories" className={({ isActive }) => isActive ? 'active' : ''}>Categories</NavLink></li>
           <li><NavLink to="/popular" className={({ isActive }) => isActive ? 'active' : ''}>Popular</NavLink></li>
           <li><NavLink to="/latest" className={({ isActive }) => isActive ? 'active' : ''}>Latest</NavLink></li>
@@ -76,7 +76,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div className={`navbar__mobile${menuOpen ? ' open' : ''}`}>
-        <NavLink to="/" end onClick={closeMenu}>Home</NavLink>
+        <NavLink to="/home" onClick={closeMenu}>Home</NavLink>
         <NavLink to="/categories" onClick={closeMenu}>Categories</NavLink>
         <NavLink to="/popular" onClick={closeMenu}>Popular</NavLink>
         <NavLink to="/latest" onClick={closeMenu}>Latest</NavLink>
