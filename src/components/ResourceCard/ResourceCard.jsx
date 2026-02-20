@@ -50,7 +50,8 @@ export default function ResourceCard({ resource, onPreview, onFeedback }) {
           <span title="Rating" className="resource-card__stars" style={{ color }}>
             {stars}
           </span>
-          <span className="resource-card__meta-item">📄 {resource.pages} pp</span>
+          <span className="resource-card__meta-item">📄 {resource.pages}pp</span>
+          <span className="resource-card__meta-item">📅 {resource.year}</span>
           <span className="resource-card__meta-item">⬇ {resource.downloads.toLocaleString()}</span>
           <span className="resource-card__meta-item">{resource.fileSize}</span>
         </div>

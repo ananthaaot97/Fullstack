@@ -46,6 +46,11 @@
   margin-top: 0.25rem;
 }
 
+/* ── Popular Resources wrapper (inside Home) ── */
+.home__popular-wrap {
+  padding: 0;
+}
+
 /* ── Grid section ── */
 .home__grid-section {
   padding: 2.5rem 0 4.5rem;

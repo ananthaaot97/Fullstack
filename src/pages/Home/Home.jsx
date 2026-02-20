@@ -4,6 +4,7 @@ import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
 import ResourceCard from '../../components/ResourceCard/ResourceCard';
 import PreviewModal from '../../components/PreviewModal/PreviewModal';
 import FeedbackForm from '../../components/FeedbackForm/FeedbackForm';
+import PopularResources from '../../components/PopularResources/PopularResources';
 import { RESOURCES } from '../../data/mockData';
 import './Home.css';
 
@@ -43,6 +44,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── Popular Resources (only when not actively filtering) ── */}
+      {!search && category === 'all' && (
+        <section className="home__popular-wrap">
+          <div className="container">
+            <PopularResources />
+          </div>
+        </section>
+      )}
 
       {/* ── Resource Grid ── */}
       <section className="home__grid-section">

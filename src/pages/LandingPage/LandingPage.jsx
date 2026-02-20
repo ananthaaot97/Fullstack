@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import FeaturedResources from '../../components/FeaturedResources/FeaturedResources';
 import './LandingPage.css';
 
 const FEATURES = [
@@ -109,6 +110,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ───── FEATURED RESOURCES ───── */}
+      <FeaturedResources />
 
       {/* ───── FEATURES ───── */}
       <section className="landing__features">
