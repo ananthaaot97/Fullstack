@@ -5,6 +5,7 @@ import ResourceCard from '../../components/ResourceCard/ResourceCard';
 import PreviewModal from '../../components/PreviewModal/PreviewModal';
 import FeedbackForm from '../../components/FeedbackForm/FeedbackForm';
 import PopularResources from '../../components/PopularResources/PopularResources';
+import FeaturedResources from '../../components/FeaturedResources/FeaturedResources';
 import { RESOURCES } from '../../data/mockData';
 import './Home.css';
 
@@ -46,6 +47,11 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── Featured Resources (only when not actively filtering) ── */}
+      {!search && category === 'all' && (
+        <FeaturedResources />
+      )}
 
       {/* ── Popular Resources (only when not actively filtering) ── */}
       {!search && category === 'all' && (
