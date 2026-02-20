@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../../context/ThemeContext';
 import AnalyticsCard from '../../components/AnalyticsCard/AnalyticsCard';
 import { RESOURCES, MOCK_USERS, ANALYTICS } from '../../data/mockData';
 import './AdminDashboard.css';
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
+  const { theme, toggle: toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('overview');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [uploadForm, setUploadForm] = useState({ title: '', author: '', category: 'textbooks', description: '', year: new Date().getFullYear() });
   const [uploadSuccess, setUploadSuccess] = useState(false);
 
@@ -33,24 +36,40 @@ export default function AdminDashboard() {
   };
 
   const SECTIONS = [
-    { id: 'overview',  label: '📊 Overview'       },
-    { id: 'upload',    label: '⬆ Upload Resource'  },
-    { id: 'resources', label: '📚 Manage Resources' },
-    { id: 'users',     label: '👥 Manage Users'    },
+    { id: 'overview',  label: 'Overview',         icon: '📊' },
+    { id: 'upload',    label: 'Upload Resource',   icon: '⬆' },
+    { id: 'resources', label: 'Manage Resources',  icon: '📚' },
+    { id: 'users',     label: 'Manage Users',      icon: '👥' },
   ];
+
+  const activeSectionLabel = SECTIONS.find(s => s.id === activeSection)?.label || '';
+
+  const handleNavClick = (id) => {
+    setActiveSection(id);
+    setSidebarOpen(false); // close on mobile after selection
+  };
 
   return (
     <main className="admin">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div className="admin__overlay" onClick={() => setSidebarOpen(false)} aria-hidden />
+      )}
+
       {/* Sidebar */}
-      <aside className="admin__sidebar">
-        <div className="admin__brand">🛡 Admin Panel</div>
+      <aside className={`admin__sidebar${sidebarOpen ? ' admin__sidebar--open' : ''}`}>
+        <div className="admin__brand">
+          <span>🛡</span>
+          <span>Admin Panel</span>
+        </div>
         <nav className="admin__nav">
           {SECTIONS.map(s => (
             <button
               key={s.id}
               className={`admin__nav-btn${activeSection === s.id ? ' active' : ''}`}
-              onClick={() => setActiveSection(s.id)}
+              onClick={() => handleNavClick(s.id)}
             >
+              <span className="admin__nav-icon">{s.icon}</span>
               {s.label}
             </button>
           ))}
@@ -58,13 +77,45 @@ export default function AdminDashboard() {
             className="admin__nav-btn admin__logout"
             onClick={() => { logout(); navigate('/'); }}
           >
-            🚪 Logout
+            <span className="admin__nav-icon">🚪</span>
+            Logout
           </button>
         </nav>
       </aside>
 
       {/* Main */}
       <div className="admin__main">
+        {/* ── Top Header ── */}
+        <header className="admin__header">
+          <div className="admin__header-left">
+            <button
+              className="admin__hamburger"
+              onClick={() => setSidebarOpen(o => !o)}
+              aria-label="Toggle sidebar"
+              aria-expanded={sidebarOpen}
+            >
+              <span /><span /><span />
+            </button>
+            <h1 className="admin__header-title">{activeSectionLabel}</h1>
+          </div>
+          <div className="admin__header-right">
+            <button
+              className="admin__theme-toggle"
+              onClick={toggleTheme}
+              aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+              title={theme === 'light' ? 'Dark mode' : 'Light mode'}
+            >
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
+            <div className="admin__header-user">
+              <div className="admin__header-avatar">{user.name.charAt(0)}</div>
+              <div>
+                <div className="admin__header-name">{user.name}</div>
+                <div className="admin__header-role">Administrator</div>
+              </div>
+            </div>
+          </div>
+        </header>
         {/* ── OVERVIEW ── */}
         {activeSection === 'overview' && (
           <section>

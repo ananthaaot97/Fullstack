@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import './HeroSection.css';
 
-export default function HeroSection({ onSearch }) {
+export default function HeroSection() {
   const navigate = useNavigate();
 
   return (

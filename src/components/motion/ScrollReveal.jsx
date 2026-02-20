@@ -13,6 +13,12 @@ import './ScrollReveal.css';
  *   once      – unobserve after reveal   (default: true)
  *   className – extra class on wrapper
  */
+
+// Detect reduced-motion once at module level (safe in Vite SPA)
+const PREFERS_REDUCED_MOTION =
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 export default function ScrollReveal({
   children,
   variant = 'fade-up',
@@ -23,14 +29,12 @@ export default function ScrollReveal({
   className = '',
 }) {
   const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
+  // If reduced motion is preferred, start visible immediately (no setState in effect)
+  const [visible, setVisible] = useState(PREFERS_REDUCED_MOTION);
 
   useEffect(() => {
-    // Immediately show if user prefers reduced motion
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setVisible(true);
-      return;
-    }
+    // Reduced-motion users already start in visible state – skip observer
+    if (PREFERS_REDUCED_MOTION) return;
 
     const el = ref.current;
     if (!el) return;

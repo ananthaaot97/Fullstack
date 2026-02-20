@@ -21,11 +21,12 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--color-primary);
-  background: #dbeafe;
+  background: rgba(59, 130, 246, 0.12);
   border-radius: var(--radius-full);
   padding: 0.25rem 0.8rem;
   margin-bottom: 0.6rem;
 }
+[data-theme="light"] .featured-resources__eyebrow { background: #dbeafe; }
 
 .featured-resources__title {
   font-size: clamp(1.4rem, 3vw, 1.85rem);

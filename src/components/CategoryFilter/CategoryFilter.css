@@ -23,8 +23,9 @@
 .cat-filter__btn:hover {
   border-color: var(--color-primary-light);
   color: var(--color-primary);
-  background: #eff6ff;
+  background: var(--color-surface-2);
 }
+[data-theme="light"] .cat-filter__btn:hover { background: #eff6ff; }
 
 .cat-filter__btn.active {
   background: var(--color-primary);

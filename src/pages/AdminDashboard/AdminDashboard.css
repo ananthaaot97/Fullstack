@@ -20,6 +20,9 @@
   font-weight: 800;
   color: #fff;
   padding: 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .admin__nav { display: flex; flex-direction: column; gap: 0.25rem; flex: 1; }
@@ -186,9 +189,200 @@
 .status-tag--active::before { content: '●'; font-size: 0.5rem; }
 .status-tag--inactive { background: #f1f5f9; color: var(--color-text-muted); }
 
+/* ── Admin Nav Icon ── */
+.admin__nav-icon {
+  display: inline-flex;
+  width: 1.1rem;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* ── Admin Header ── */
+.admin__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  /* Break out of admin__main's padding to go full-width */
+  margin: -2rem -2.5rem 2rem;
+  padding: 0 2.5rem;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 64px; /* sit below the app navbar */
+  z-index: 100;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.admin__header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.admin__header-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.admin__header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.admin__header-user {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.admin__header-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.admin__header-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.admin__header-role {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Admin Theme Toggle ── */
+.admin__theme-toggle {
+  background: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background var(--transition), border-color var(--transition);
+  flex-shrink: 0;
+}
+.admin__theme-toggle:hover {
+  background: var(--color-border);
+  border-color: var(--color-primary);
+}
+
+/* ── Mobile hamburger (inside admin header) ── */
+.admin__hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+.admin__hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--color-text);
+  border-radius: 2px;
+  transition: transform 0.28s ease, opacity 0.28s ease;
+}
+
+/* ── Dark mode overrides ── */
+[data-theme="dark"] .admin__table tr:hover td {
+  background: var(--color-surface-2);
+}
+
+[data-theme="dark"] .admin__success-banner {
+  background: rgba(52, 211, 153, 0.1);
+  border-color: rgba(52, 211, 153, 0.3);
+  color: #34d399;
+}
+
+[data-theme="dark"] .cat-tag {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--color-primary);
+}
+
+[data-theme="dark"] .admin__file-drop:hover {
+  background: rgba(59, 130, 246, 0.06);
+}
+
+/* ── Responsive ── */
 @media (max-width: 768px) {
-  .admin { flex-direction: column; }
-  .admin__sidebar { width: 100%; }
+  /* Sidebar becomes a fixed slide-in overlay */
+  .admin__sidebar {
+    position: fixed;
+    top: 64px; /* below the sticky navbar */
+    left: 0;
+    height: calc(100vh - 64px);
+    z-index: 300;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    width: 240px;
+  }
+
+  .admin__sidebar--open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-xl);
+  }
+
+  /* Dim overlay */
+  .admin__overlay {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 200;
+    backdrop-filter: blur(2px);
+  }
+
+  /* Show hamburger */
+  .admin__hamburger { display: flex; }
+
+  /* Adjust header for mobile */
+  .admin__header {
+    margin: -1.25rem -1.25rem 1.25rem;
+    padding: 0 1rem;
+    height: 56px;
+    top: 64px;
+  }
+
+  .admin__header-name,
+  .admin__header-role { display: none; }
+
   .admin__main { padding: 1.25rem; }
+
   .form-row { grid-template-columns: 1fr; }
+
+  .admin__analytics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin__bar-chart { gap: 0.4rem; }
+}
+
+@media (max-width: 480px) {
+  .admin__analytics-grid { grid-template-columns: 1fr; }
+  .admin__table-resource { max-width: 160px; }
 }

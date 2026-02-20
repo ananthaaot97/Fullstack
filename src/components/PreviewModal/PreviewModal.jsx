@@ -1,12 +1,43 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import './PreviewModal.css';
 
+/** Returns all keyboard-focusable elements inside a container */
+function getFocusable(container) {
+  return Array.from(
+    container.querySelectorAll(
+      'a[href],button:not([disabled]),textarea,input,select,[tabindex]:not([tabindex="-1"])'
+    )
+  );
+}
+
 export default function PreviewModal({ resource, onClose }) {
-  // Close on Escape
+  const modalRef = useRef(null);
+
   useEffect(() => {
-    const handler = (e) => { if (e.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', handler);
+    // Lock scroll
     document.body.style.overflow = 'hidden';
+
+    // Focus the modal itself on mount so screen readers announce it
+    modalRef.current?.focus();
+
+    const handler = (e) => {
+      if (e.key === 'Escape') { onClose(); return; }
+
+      // Focus trap on Tab
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusable = getFocusable(modalRef.current);
+        if (!focusable.length) { e.preventDefault(); return; }
+        const first = focusable[0];
+        const last  = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handler);
     return () => {
       document.removeEventListener('keydown', handler);
       document.body.style.overflow = '';
@@ -16,8 +47,14 @@ export default function PreviewModal({ resource, onClose }) {
   if (!resource) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Resource preview">
-      <div className="modal" onClick={e => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div
+        className="modal"
+        onClick={e => e.stopPropagation()}
+        ref={modalRef}
+        tabIndex={-1}
+        aria-label="Resource preview"
+      >
         <button className="modal__close" onClick={onClose} aria-label="Close modal">✕</button>
 
         <div className="modal__header">
@@ -28,7 +65,7 @@ export default function PreviewModal({ resource, onClose }) {
           />
           <div>
             <span className="modal__category-badge">{resource.categoryLabel}</span>
-            <h2 className="modal__title">{resource.title}</h2>
+            <h2 className="modal__title" id="modal-title">{resource.title}</h2>
             <p className="modal__author">by {resource.author} • {resource.year}</p>
           </div>
         </div>

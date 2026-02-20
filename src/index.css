@@ -214,3 +214,35 @@ input, textarea, select { font-family: var(--font); }
   background: rgba(96, 165, 250, 0.15);
   color: var(--color-primary);
 }
+
+/* ── Dark mode: auth error box ── */
+[data-theme="dark"] .auth-error {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--color-danger);
+}
+
+/* ── Dark mode: home search header background ── */
+[data-theme="dark"] .home__search-header {
+  background: linear-gradient(160deg, #0f1f40 0%, #0f1c38 100%);
+  border-bottom-color: var(--color-border);
+}
+
+/* ── Dark mode: home search bar ── */
+[data-theme="dark"] .home__search-bar-wrap .search-bar--pill {
+  border-color: rgba(59, 130, 246, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* ── Dark mode: clear-filter hover ── */
+[data-theme="dark"] .home__clear-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* ── Dark mode: page-hero fire/green variants ── */
+[data-theme="dark"] .page-hero--fire {
+  background: linear-gradient(135deg, #451a03, #92400e);
+}
+[data-theme="dark"] .page-hero--green {
+  background: linear-gradient(135deg, #022c22, #064e3b);
+}

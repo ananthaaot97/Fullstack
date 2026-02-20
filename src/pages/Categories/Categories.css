@@ -28,7 +28,8 @@
   gap: 0.5rem;
 }
 .cat-card:hover { border-color: var(--color-primary-light); box-shadow: var(--shadow-md); transform: translateY(-2px); }
-.cat-card.active { border-color: var(--color-primary); background: #eff6ff; }
+.cat-card.active { border-color: var(--color-primary); background: var(--color-surface-2); }
+[data-theme="light"] .cat-card.active { background: #eff6ff; }
 .cat-card__icon { font-size: 2rem; }
 .cat-card__label { font-size: 0.95rem; font-weight: 700; color: var(--color-text); }
 .cat-card__count { font-size: 0.8rem; color: var(--color-text-muted); }
