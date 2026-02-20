@@ -21,25 +21,28 @@
   margin-bottom: 1.5rem;
 }
 
-/* Large, prominent search bar */
+/* Premium pill search bar */
 .home__search-bar-wrap {
-  max-width: 680px;
+  max-width: 700px;
   margin-bottom: 1.25rem;
 }
 
-.home__search-bar-wrap .search-bar {
-  box-shadow: 0 4px 16px rgba(26,86,219,.12);
+/* The .search-bar--pill class on SearchBar handles most of the pill styling.
+   These overrides add extra height/emphasis in the Home context. */
+.home__search-bar-wrap .search-bar--pill {
+  padding: 0.6rem 0.6rem 0.6rem 1.3rem;
+  box-shadow: 0 4px 20px rgba(26,86,219,.13);
   border-color: #bfdbfe;
-  padding: 0.85rem 1.4rem;
 }
 
 .home__search-bar-wrap .search-bar__input {
   font-size: 1.05rem;
+  padding: 0.25rem 0;
 }
 
-.home__search-bar-wrap .search-bar--focused {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px rgba(26,86,219,.14), 0 4px 16px rgba(26,86,219,.1);
+.home__search-bar-wrap .search-bar__filter-btn {
+  padding: 0.55rem 1.2rem;
+  font-size: 0.875rem;
 }
 
 .home__chips-wrap {

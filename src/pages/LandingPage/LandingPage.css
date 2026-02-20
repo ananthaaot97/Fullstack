@@ -9,6 +9,15 @@
   padding: 5.5rem 0 5rem;
 }
 
+/* Full-viewport hero for the minimal landing */
+.landing__hero--full {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6rem 0;
+}
+
 .landing__hero-shapes { position: absolute; inset: 0; pointer-events: none; }
 
 .lh-shape {

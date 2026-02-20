@@ -37,6 +37,8 @@ export default function Home() {
               value={search}
               onChange={setSearch}
               placeholder="Search by title, author or tag…"
+              showFilter
+              onFilter={() => {}}
             />
           </div>
           <div className="home__chips-wrap">
