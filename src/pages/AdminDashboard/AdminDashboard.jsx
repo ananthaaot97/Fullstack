@@ -531,22 +531,28 @@ export default function AdminDashboard() {
                 <div className="form-group">
                   <label className="form-label admin__form-group-label">Resource Title <span className="required">*</span></label>
                   <input
+                    id="upload-title"
                     className={`form-input${uploadErrors.title ? ' form-input--error' : ''}`}
                     placeholder="e.g. Linear Algebra Done Right"
                     value={uploadForm.title}
                     onChange={e => setUploadForm(f => ({ ...f, title: e.target.value }))}
+                    aria-invalid={!!uploadErrors.title}
+                    aria-describedby={uploadErrors.title ? 'upload-title-error' : undefined}
                   />
-                  {uploadErrors.title && <span className="form-error">{uploadErrors.title}</span>}
+                  {uploadErrors.title && <span id="upload-title-error" className="form-error">{uploadErrors.title}</span>}
                 </div>
                 <div className="form-group">
                   <label className="form-label admin__form-group-label">Author(s) <span className="required">*</span></label>
                   <input
+                    id="upload-author"
                     className={`form-input${uploadErrors.author ? ' form-input--error' : ''}`}
                     placeholder="e.g. Sheldon Axler"
                     value={uploadForm.author}
                     onChange={e => setUploadForm(f => ({ ...f, author: e.target.value }))}
+                    aria-invalid={!!uploadErrors.author}
+                    aria-describedby={uploadErrors.author ? 'upload-author-error' : undefined}
                   />
-                  {uploadErrors.author && <span className="form-error">{uploadErrors.author}</span>}
+                  {uploadErrors.author && <span id="upload-author-error" className="form-error">{uploadErrors.author}</span>}
                 </div>
               </div>
 
@@ -593,13 +599,16 @@ export default function AdminDashboard() {
               <div className="form-group">
                 <label className="form-label admin__form-group-label">Description <span className="required">*</span></label>
                 <textarea
+                  id="upload-description"
                   className={`form-input form-textarea${uploadErrors.description ? ' form-input--error' : ''}`}
                   rows={4}
                   placeholder="Brief description of the resource…"
                   value={uploadForm.description}
                   onChange={e => setUploadForm(f => ({ ...f, description: e.target.value }))}
+                  aria-invalid={!!uploadErrors.description}
+                  aria-describedby={uploadErrors.description ? 'upload-description-error' : undefined}
                 />
-                {uploadErrors.description && <span className="form-error">{uploadErrors.description}</span>}
+                {uploadErrors.description && <span id="upload-description-error" className="form-error">{uploadErrors.description}</span>}
               </div>
 
               <p className="admin__form-section-heading">File & Media</p>

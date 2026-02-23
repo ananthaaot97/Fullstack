@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import BrandLogo from '../brand/BrandLogo';
 import './Footer.css';
 
 export default function Footer() {
@@ -6,7 +7,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer__inner">
         <div className="footer__brand">
-          <span className="footer__logo">📚 Read<strong>Space</strong></span>
+          <BrandLogo size="sm" variant="sidebar" />
           <p>An open educational resource hub for students, researchers and educators.</p>
         </div>
 

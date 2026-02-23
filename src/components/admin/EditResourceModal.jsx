@@ -88,13 +88,13 @@ export default function EditResourceModal({ resource, onSave, onClose }) {
           <div className="adm-edit__grid">
             <div className="form-group">
               <label className="form-label">Title <span className="required">*</span></label>
-              <input className={`form-input${errors.title ? ' form-input--error' : ''}`} {...field('title')} placeholder="Resource title" />
-              {errors.title && <span className="form-error">{errors.title}</span>}
+              <input id="edit-title" className={`form-input${errors.title ? ' form-input--error' : ''}`} {...field('title')} placeholder="Resource title" aria-invalid={!!errors.title} aria-describedby={errors.title ? 'edit-title-error' : undefined} />
+              {errors.title && <span id="edit-title-error" className="form-error">{errors.title}</span>}
             </div>
             <div className="form-group">
               <label className="form-label">Author(s) <span className="required">*</span></label>
-              <input className={`form-input${errors.author ? ' form-input--error' : ''}`} {...field('author')} placeholder="Author name(s)" />
-              {errors.author && <span className="form-error">{errors.author}</span>}
+              <input id="edit-author" className={`form-input${errors.author ? ' form-input--error' : ''}`} {...field('author')} placeholder="Author name(s)" aria-invalid={!!errors.author} aria-describedby={errors.author ? 'edit-author-error' : undefined} />
+              {errors.author && <span id="edit-author-error" className="form-error">{errors.author}</span>}
             </div>
           </div>
 
@@ -135,12 +135,15 @@ export default function EditResourceModal({ resource, onSave, onClose }) {
           <div className="form-group">
             <label className="form-label">Description <span className="required">*</span></label>
             <textarea
+              id="edit-description"
               className={`form-input form-textarea${errors.description ? ' form-input--error' : ''}`}
               rows={4}
               {...field('description')}
               placeholder="Brief description…"
+              aria-invalid={!!errors.description}
+              aria-describedby={errors.description ? 'edit-description-error' : undefined}
             />
-            {errors.description && <span className="form-error">{errors.description}</span>}
+            {errors.description && <span id="edit-description-error" className="form-error">{errors.description}</span>}
           </div>
 
           <footer className="adm-modal__footer">

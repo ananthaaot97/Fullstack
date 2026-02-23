@@ -12,12 +12,8 @@
   padding: 3rem 1.5rem;
 }
 
-.footer__brand .footer__logo {
-  display: inline-block;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 0.75rem;
+.footer__brand {
+  margin-bottom: 0.25rem;
 }
 
 .footer__brand p {
