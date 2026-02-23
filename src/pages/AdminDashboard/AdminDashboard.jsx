@@ -3,6 +3,10 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { RESOURCES, MOCK_USERS, ANALYTICS } from '../../data/mockData';
+import ResourcePreviewModal from '../../components/admin/ResourcePreviewModal';
+import EditResourceModal from '../../components/admin/EditResourceModal';
+import ConfirmDialog from '../../components/admin/ConfirmDialog';
+import RecentActivity from '../../components/admin/RecentActivity';
 import './AdminDashboard.css';
 
 /* ── Helper components ─────────────────────────────────────── */
@@ -60,11 +64,20 @@ const SECTIONS = [
   { id: 'settings',   label: 'Settings',          icon: '⚙' },
 ];
 
+const INITIAL_ACTIVITIES = [
+  { id: 1, icon: '📚', text: 'Resource "Introduction to Algorithms" published', type: 'success', time: '09:14' },
+  { id: 2, icon: '👤', text: 'New user Ananya Sharma registered', type: 'info',    time: '08:52' },
+  { id: 3, icon: '⬇', text: '"React & Next.js Tutorial" downloaded 50× today',   type: 'info',    time: '08:30' },
+  { id: 4, icon: '✏', text: 'Resource "Deep Learning with Python" edited',        type: 'warning', time: 'Yesterday' },
+  { id: 5, icon: '🚫', text: 'User Vikram Singh account disabled',                type: 'error',   time: 'Yesterday' },
+];
+
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
   const { theme, toggle: toggleTheme } = useTheme();
   const navigate = useNavigate();
   const toastCounter = useRef(0);
+  const activityCounter = useRef(5); // starts after INITIAL_ACTIVITIES
 
   const [activeSection, setActiveSection] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -87,6 +100,14 @@ export default function AdminDashboard() {
 
   // Toast
   const [toast, setToast] = useState(null);
+
+  // Modals / dialogs
+  const [previewResource, setPreviewResource] = useState(null);
+  const [editResource, setEditResource] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null); // { id, title }
+
+  // Activity feed
+  const [activities, setActivities] = useState(INITIAL_ACTIVITIES);
 
   // Settings
   const [settings, setSettings] = useState({
@@ -115,6 +136,12 @@ export default function AdminDashboard() {
     setToast({ message, type, key: toastCounter.current });
   };
 
+  const addActivity = (text, icon, type = 'info') => {
+    activityCounter.current += 1;
+    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    setActivities(prev => [{ id: activityCounter.current, icon, text, type, time: now }, ...prev].slice(0, 20));
+  };
+
   const handleNavClick = (id) => {
     if (id === activeSection) { setSidebarOpen(false); return; }
     setResLoading(true);
@@ -125,16 +152,26 @@ export default function AdminDashboard() {
 
   /* ── Resource actions ── */
   const toggleStatus = (id) => {
-    setResources(rs => rs.map(r =>
-      r.id === id ? { ...r, status: r.status === 'published' ? 'draft' : 'published' } : r
-    ));
-    showToast('Resource status updated.');
+    const res = resources.find(r => r.id === id);
+    const newStatus = res?.status === 'published' ? 'draft' : 'published';
+    setResources(rs => rs.map(r => r.id === id ? { ...r, status: newStatus } : r));
+    showToast(`Resource set to ${newStatus}.`);
+    if (res) addActivity(`"${res.title}" set to ${newStatus}`, newStatus === 'published' ? '✅' : '⬇', newStatus === 'published' ? 'success' : 'warning');
   };
 
-  const deleteResource = (id, title) => {
-    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
-    setResources(rs => rs.filter(r => r.id !== id));
-    showToast('Resource deleted.', 'error');
+  const handleConfirmDelete = () => {
+    if (!confirmDelete) return;
+    setResources(rs => rs.filter(r => r.id !== confirmDelete.id));
+    showToast(`"${confirmDelete.title}" deleted.`, 'error');
+    addActivity(`Resource "${confirmDelete.title}" deleted`, '🗑', 'error');
+    setConfirmDelete(null);
+  };
+
+  const handleSaveEdit = (updated) => {
+    setResources(rs => rs.map(r => r.id === updated.id ? updated : r));
+    setEditResource(null);
+    showToast(`"${updated.title}" updated successfully.`);
+    addActivity(`Resource "${updated.title}" edited`, '✏', 'warning');
   };
 
   const filteredResources = resources.filter(r =>
@@ -144,15 +181,18 @@ export default function AdminDashboard() {
 
   /* ── User actions ── */
   const toggleUserStatus = (id) => {
-    setUsers(us => us.map(u =>
-      u.id === id ? { ...u, status: u.status === 'active' ? 'inactive' : 'active' } : u
-    ));
+    const u = users.find(u => u.id === id);
+    const newStatus = u?.status === 'active' ? 'inactive' : 'active';
+    setUsers(us => us.map(u => u.id === id ? { ...u, status: newStatus } : u));
     showToast('User status updated.');
+    if (u) addActivity(`User "${u.name}" ${newStatus === 'active' ? 'enabled' : 'disabled'}`, newStatus === 'active' ? '✅' : '🚫', newStatus === 'active' ? 'success' : 'error');
   };
 
   const changeRole = (id, role) => {
+    const u = users.find(u => u.id === id);
     setUsers(us => us.map(u => u.id === id ? { ...u, role } : u));
     showToast('Role updated.');
+    if (u) addActivity(`User "${u.name}" role changed to ${role}`, '👤', 'info');
   };
 
   const filteredUsers = users.filter(u =>
@@ -177,6 +217,7 @@ export default function AdminDashboard() {
     setUploadLoading(true);
     await new Promise(r => setTimeout(r, 1200));
     setUploadLoading(false);
+    addActivity(`Resource "${uploadForm.title}" uploaded`, '📚', 'success');
     setUploadForm(INITIAL_UPLOAD);
     showToast('Resource uploaded successfully!');
   };
@@ -200,6 +241,30 @@ export default function AdminDashboard() {
           message={toast.message}
           type={toast.type}
           onDone={() => setToast(null)}
+        />
+      )}
+
+      {/* ── Modals & Dialogs ── */}
+      {previewResource && (
+        <ResourcePreviewModal
+          resource={previewResource}
+          onClose={() => setPreviewResource(null)}
+        />
+      )}
+      {editResource && (
+        <EditResourceModal
+          resource={editResource}
+          onSave={handleSaveEdit}
+          onClose={() => setEditResource(null)}
+        />
+      )}
+      {confirmDelete && (
+        <ConfirmDialog
+          title="Delete Resource"
+          message={`Are you sure you want to delete "${confirmDelete.title}"? This cannot be undone.`}
+          confirmLabel="Delete"
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setConfirmDelete(null)}
         />
       )}
 
@@ -305,6 +370,8 @@ export default function AdminDashboard() {
               </div>
             </div>
 
+            <RecentActivity activities={activities} />
+
             <div className="admin__quick-table-wrap">
               <h3 className="admin__qt-title">Top 5 Resources by Downloads</h3>
               <table className="admin__table admin__quick-table">
@@ -397,16 +464,32 @@ export default function AdminDashboard() {
                           <td className="admin__td-muted">{r.uploadDate}</td>
                           <td>
                             <div className="admin__row-actions">
-                              <button className="admin__icon-btn" title="Preview" onClick={() => showToast(`Previewing "${r.title}"`)}>👁</button>
-                              <button className="admin__icon-btn" title="Edit" onClick={() => showToast('Edit form coming soon.')}>✏</button>
+                              <button
+                                className="admin__icon-btn"
+                                data-tip="Preview"
+                                aria-label={`Preview ${r.title}`}
+                                onClick={() => setPreviewResource(r)}
+                              >👁</button>
+                              <button
+                                className="admin__icon-btn"
+                                data-tip="Edit"
+                                aria-label={`Edit ${r.title}`}
+                                onClick={() => setEditResource(r)}
+                              >✏</button>
                               <button
                                 className={`admin__icon-btn admin__icon-btn--toggle${r.status === 'published' ? '' : ' active'}`}
-                                title={r.status === 'published' ? 'Set to Draft' : 'Publish'}
+                                data-tip={r.status === 'published' ? 'Set to Draft' : 'Publish'}
+                                aria-label={r.status === 'published' ? `Set ${r.title} to draft` : `Publish ${r.title}`}
                                 onClick={() => toggleStatus(r.id)}
                               >
                                 {r.status === 'published' ? '⬇' : '⬆'}
                               </button>
-                              <button className="admin__icon-btn admin__icon-btn--danger" title="Delete" onClick={() => deleteResource(r.id, r.title)}>🗑</button>
+                              <button
+                                className="admin__icon-btn admin__icon-btn--danger"
+                                data-tip="Delete"
+                                aria-label={`Delete ${r.title}`}
+                                onClick={() => setConfirmDelete({ id: r.id, title: r.title })}
+                              >🗑</button>
                             </div>
                           </td>
                         </tr>
