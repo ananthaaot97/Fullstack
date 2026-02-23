@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { X, FolderOpen, Calendar, FileText, HardDrive, Star, Download, CheckCircle, EyeOff } from 'lucide-react';
 import './admin-components.css';
 
 export default function ResourcePreviewModal({ resource, onClose }) {
@@ -31,7 +32,7 @@ export default function ResourcePreviewModal({ resource, onClose }) {
             onClick={onClose}
             aria-label="Close preview"
           >
-            ✕
+            <X size={14} strokeWidth={2.5} />
           </button>
         </header>
 
@@ -44,7 +45,9 @@ export default function ResourcePreviewModal({ resource, onClose }) {
             />
             <div className="adm-preview__meta">
               <span className={`admin__status-badge admin__status-badge--${resource.status}`}>
-                {resource.status === 'published' ? '● Published' : '○ Draft'}
+                {resource.status === 'published'
+                  ? <><CheckCircle size={11} strokeWidth={2.5} style={{ marginRight: 4 }} />Published</>
+                  : <><EyeOff size={11} strokeWidth={2} style={{ marginRight: 4 }} />Draft</>}
               </span>
               <h3 className="adm-preview__resource-title">{resource.title}</h3>
               <p className="adm-preview__author">by {resource.author}</p>
@@ -63,42 +66,42 @@ export default function ResourcePreviewModal({ resource, onClose }) {
 
           <div className="adm-preview__stats">
             <div className="adm-preview__stat">
-              <span className="adm-preview__stat-icon">🗂</span>
+              <span className="adm-preview__stat-icon"><FolderOpen size={16} strokeWidth={1.75} /></span>
               <div>
                 <div className="adm-preview__stat-label">Category</div>
                 <div className="adm-preview__stat-value">{resource.categoryLabel}</div>
               </div>
             </div>
             <div className="adm-preview__stat">
-              <span className="adm-preview__stat-icon">📅</span>
+              <span className="adm-preview__stat-icon"><Calendar size={16} strokeWidth={1.75} /></span>
               <div>
                 <div className="adm-preview__stat-label">Year</div>
                 <div className="adm-preview__stat-value">{resource.year}</div>
               </div>
             </div>
             <div className="adm-preview__stat">
-              <span className="adm-preview__stat-icon">📄</span>
+              <span className="adm-preview__stat-icon"><FileText size={16} strokeWidth={1.75} /></span>
               <div>
                 <div className="adm-preview__stat-label">Pages</div>
                 <div className="adm-preview__stat-value">{resource.pages ?? '—'}</div>
               </div>
             </div>
             <div className="adm-preview__stat">
-              <span className="adm-preview__stat-icon">💾</span>
+              <span className="adm-preview__stat-icon"><HardDrive size={16} strokeWidth={1.75} /></span>
               <div>
                 <div className="adm-preview__stat-label">File Size</div>
                 <div className="adm-preview__stat-value">{resource.fileSize ?? '—'}</div>
               </div>
             </div>
             <div className="adm-preview__stat">
-              <span className="adm-preview__stat-icon">⭐</span>
+              <span className="adm-preview__stat-icon"><Star size={16} strokeWidth={1.75} /></span>
               <div>
                 <div className="adm-preview__stat-label">Rating</div>
                 <div className="adm-preview__stat-value">{resource.rating} / 5.0</div>
               </div>
             </div>
             <div className="adm-preview__stat">
-              <span className="adm-preview__stat-icon">⬇</span>
+              <span className="adm-preview__stat-icon"><Download size={16} strokeWidth={1.75} /></span>
               <div>
                 <div className="adm-preview__stat-label">Downloads</div>
                 <div className="adm-preview__stat-value">{(resource.downloads || 0).toLocaleString()}</div>

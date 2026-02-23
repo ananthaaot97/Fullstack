@@ -224,7 +224,16 @@
   padding: 0.7rem 0.85rem;
 }
 
-.adm-preview__stat-icon { font-size: 1.1rem; flex-shrink: 0; }
+.adm-preview__stat-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  width: 24px;
+  height: 24px;
+}
 .adm-preview__stat-label { font-size: 0.7rem; color: var(--color-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 .adm-preview__stat-value { font-size: 0.9rem; font-weight: 700; color: var(--color-text); }
 
@@ -407,7 +416,8 @@
 }
 
 /* Tooltip via data-tip attribute */
-.admin__icon-btn[data-tip]::after {
+.admin__icon-btn[data-tip]::after,
+.admin__action-btn[data-tip]::after {
   content: attr(data-tip);
   position: absolute;
   bottom: calc(100% + 6px);
@@ -425,7 +435,8 @@
   transition: opacity 0.15s ease;
   z-index: 50;
 }
-.admin__icon-btn[data-tip]::before {
+.admin__icon-btn[data-tip]::before,
+.admin__action-btn[data-tip]::before {
   content: '';
   position: absolute;
   bottom: calc(100% + 1px);
@@ -439,11 +450,14 @@
   z-index: 50;
 }
 .admin__icon-btn[data-tip]:hover::after,
-.admin__icon-btn[data-tip]:hover::before {
+.admin__action-btn[data-tip]:hover::after,
+.admin__icon-btn[data-tip]:hover::before,
+.admin__action-btn[data-tip]:hover::before {
   opacity: 1;
 }
 
-.admin__icon-btn:focus-visible {
+.admin__icon-btn:focus-visible,
+.admin__action-btn:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }

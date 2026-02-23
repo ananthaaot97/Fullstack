@@ -189,13 +189,24 @@
 .status-tag--active::before { content: '●'; font-size: 0.5rem; }
 .status-tag--inactive { background: #f1f5f9; color: var(--color-text-muted); }
 
-/* ── Admin Nav Icon ── */
-.admin__nav-icon {
-  display: inline-flex;
-  width: 1.1rem;
-  margin-right: 0.5rem;
+/* ── Admin Nav Icon (SVG lucide) ── */
+.admin__nav-icon-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-right: 0.5rem;
 }
+.admin__brand-icon-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
 
 /* ── Admin Header ── */
 .admin__header {
@@ -288,23 +299,18 @@
 /* ── Mobile hamburger (inside admin header) ── */
 .admin__hamburger {
   display: none;
-  flex-direction: column;
-  gap: 5px;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   border: none;
   padding: 6px;
   cursor: pointer;
   border-radius: var(--radius-md);
+  color: var(--color-text);
   flex-shrink: 0;
+  transition: background var(--transition);
 }
-.admin__hamburger span {
-  display: block;
-  width: 20px;
-  height: 2px;
-  background: var(--color-text);
-  border-radius: 2px;
-  transition: transform 0.28s ease, opacity 0.28s ease;
-}
+.admin__hamburger:hover { background: var(--color-surface-2); }
 
 /* ── Dark mode overrides ── */
 [data-theme="dark"] .admin__table tr:hover td {
@@ -476,6 +482,89 @@
 }
 .admin__status-badge--published { background: #d1fae5; color: #065f46; }
 .admin__status-badge--draft     { background: #f1f5f9; color: var(--color-text-muted); }
+
+/* ── Enterprise Action Buttons (icon-only, 40×40) ── */
+.admin__action-btn {
+  min-width: 34px;
+  min-height: 34px;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface-2);
+  border-radius: var(--radius-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease, transform 150ms ease;
+  flex-shrink: 0;
+  position: relative;
+}
+.admin__action-btn:hover {
+  background: var(--color-border);
+  color: var(--color-text);
+  transform: translateY(-1px);
+}
+.admin__action-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+.admin__action-btn--danger  { color: #ef4444; }
+.admin__action-btn--danger:hover  { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+.admin__action-btn--toggle  { color: var(--color-primary); }
+.admin__action-btn--toggle:hover { background: #eff6ff; border-color: var(--color-primary); color: var(--color-primary); }
+.admin__action-btn--toggle-active { color: #10b981; }
+.admin__action-btn--toggle-active:hover { background: #d1fae5; border-color: #6ee7b7; }
+.admin__action-btn--success { color: #10b981; }
+.admin__action-btn--success:hover { background: #d1fae5; border-color: #6ee7b7; color: #059669; }
+
+/* ── Date Range Selector ── */
+.admin__date-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 0.35rem 0.75rem 0.35rem 0.65rem;
+  background: var(--color-surface-2);
+  position: relative;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.admin__date-range:focus-within {
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+}
+.admin__date-icon {
+  color: var(--color-text-muted);
+  display: flex;
+  flex-shrink: 0;
+}
+.admin__date-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  padding-right: 1rem;
+  min-width: 6rem;
+}
+.admin__date-chevron {
+  color: var(--color-text-muted);
+  display: flex;
+  flex-shrink: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0.55rem;
+}
+
+/* ── Status badge icon alignment ── */
+.admin__status-badge { display: inline-flex; align-items: center; }
 
 /* ── Icon action buttons ── */
 .admin__icon-btn {
@@ -657,15 +746,15 @@
 .admin__switch input:checked + .admin__switch-track { background: var(--color-primary); }
 .admin__switch input:checked + .admin__switch-track::before { transform: translateX(20px); }
 
-/* ── Brand icon ── */
-.admin__brand-icon { font-size: 1.1rem; }
-
 /* ── Dark mode overrides for new elements ── */
 [data-theme="dark"] .admin-toast--success { background: rgba(52,211,153,0.15); border-color: rgba(52,211,153,0.3); color: #34d399; }
 [data-theme="dark"] .admin-toast--error   { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); color: #f87171; }
 [data-theme="dark"] .admin__status-badge--published { background: rgba(16,185,129,0.15); color: #34d399; }
 [data-theme="dark"] .admin__status-badge--draft     { background: var(--color-surface-2); }
 [data-theme="dark"] .admin__icon-btn { background: var(--color-surface-2); }
+[data-theme="dark"] .admin__action-btn { background: var(--color-surface-2); }
+[data-theme="dark"] .admin__date-range { background: var(--color-surface-2); }
+[data-theme="dark"] .admin__date-select { color: var(--color-text); }
 [data-theme="dark"] .admin__role-select { background: var(--color-surface-2); }
 [data-theme="dark"] .admin__switch-track { background: #334155; }
 [data-theme="dark"] .admin__cat-bar-bg { background: #1e293b; }

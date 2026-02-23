@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import './admin-components.css';
 
 export default function ConfirmDialog({ title, message, confirmLabel = 'Delete', onConfirm, onCancel }) {
@@ -21,7 +22,7 @@ export default function ConfirmDialog({ title, message, confirmLabel = 'Delete',
       onClick={e => { if (e.target === e.currentTarget) onCancel(); }}
     >
       <div className="adm-modal adm-modal--confirm">
-        <div className="adm-confirm__icon">⚠️</div>
+        <div className="adm-confirm__icon"><AlertTriangle size={32} strokeWidth={1.5} /></div>
         <h2 className="adm-confirm__title">{title}</h2>
         <p className="adm-confirm__message">{message}</p>
         <div className="adm-confirm__actions">

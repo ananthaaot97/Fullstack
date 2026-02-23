@@ -7,6 +7,12 @@ import ResourcePreviewModal from '../../components/admin/ResourcePreviewModal';
 import EditResourceModal from '../../components/admin/EditResourceModal';
 import ConfirmDialog from '../../components/admin/ConfirmDialog';
 import RecentActivity from '../../components/admin/RecentActivity';
+import {
+  LayoutDashboard, BookOpen, Upload, Users, BarChart2, Settings, LogOut,
+  ShieldCheck, Menu, Sun, Moon, Eye, Pencil, Globe, EyeOff, Trash2,
+  ArrowDownToLine, Layers, Star, AlertCircle, Calendar, ChevronDown, X,
+  CheckCircle,
+} from 'lucide-react';
 import './AdminDashboard.css';
 
 /* ── Helper components ─────────────────────────────────────── */
@@ -32,16 +38,31 @@ function EmptyState({ icon, title, sub, action, onAction }) {
   );
 }
 
-function StatCard({ icon, label, value, delta, color }) {
+function StatCard({ Icon, label, value, delta, color }) {
   return (
     <div className="admin__stat-card">
-      <div className="admin__stat-icon" style={{ background: color + '22', color }}>{icon}</div>
+      <div className="admin__stat-icon" style={{ background: color + '1a', color }}>
+        <Icon size={22} strokeWidth={1.75} />
+      </div>
       <div className="admin__stat-body">
         <span className="admin__stat-label">{label}</span>
         <span className="admin__stat-value">{value}</span>
         {delta && <span className="admin__stat-delta">{delta}</span>}
       </div>
     </div>
+  );
+}
+
+function ActionBtn({ Icon: IconComp, label, tooltip, variant, onClick }) {
+  return (
+    <button
+      className={`admin__action-btn${variant ? ` admin__action-btn--${variant}` : ''}`}
+      onClick={onClick}
+      aria-label={label}
+      data-tip={tooltip}
+    >
+      <IconComp size={16} strokeWidth={2} />
+    </button>
   );
 }
 
@@ -56,12 +77,18 @@ function Toast({ message, type, onDone }) {
 const INITIAL_UPLOAD = { title: '', author: '', category: 'textbooks', description: '', year: new Date().getFullYear(), tags: '', status: 'draft' };
 
 const SECTIONS = [
-  { id: 'overview',   label: 'Overview',         icon: '📊' },
-  { id: 'resources',  label: 'Resources',         icon: '📚' },
-  { id: 'upload',     label: 'Upload Resource',   icon: '⬆' },
-  { id: 'users',      label: 'Users',             icon: '👥' },
-  { id: 'analytics',  label: 'Analytics',         icon: '📈' },
-  { id: 'settings',   label: 'Settings',          icon: '⚙' },
+  { id: 'overview',   label: 'Overview',         Icon: LayoutDashboard },
+  { id: 'resources',  label: 'Resources',         Icon: BookOpen },
+  { id: 'upload',     label: 'Upload Resource',   Icon: Upload },
+  { id: 'users',      label: 'Users',             Icon: Users },
+  { id: 'analytics',  label: 'Analytics',         Icon: BarChart2 },
+  { id: 'settings',   label: 'Settings',          Icon: Settings },
+];
+
+const DATE_RANGES = [
+  { value: 'last7',    label: 'Last 7 days' },
+  { value: 'last30',   label: 'Last 30 days' },
+  { value: 'thisyear', label: 'This year' },
 ];
 
 const INITIAL_ACTIVITIES = [
@@ -108,6 +135,9 @@ export default function AdminDashboard() {
 
   // Activity feed
   const [activities, setActivities] = useState(INITIAL_ACTIVITIES);
+
+  // Date range filter
+  const [dateRange, setDateRange] = useState('last30');
 
   // Settings
   const [settings, setSettings] = useState({
@@ -276,7 +306,7 @@ export default function AdminDashboard() {
       {/* Sidebar */}
       <aside className={`admin__sidebar${sidebarOpen ? ' admin__sidebar--open' : ''}`}>
         <div className="admin__brand">
-          <span className="admin__brand-icon">🛡</span>
+          <ShieldCheck size={20} strokeWidth={2} className="admin__brand-icon-svg" />
           <span>Read<strong>Space</strong></span>
         </div>
         <nav className="admin__nav">
@@ -286,7 +316,7 @@ export default function AdminDashboard() {
               className={`admin__nav-btn${activeSection === s.id ? ' active' : ''}`}
               onClick={() => handleNavClick(s.id)}
             >
-              <span className="admin__nav-icon">{s.icon}</span>
+              <s.Icon size={16} strokeWidth={2} className="admin__nav-icon-svg" />
               {s.label}
             </button>
           ))}
@@ -294,7 +324,7 @@ export default function AdminDashboard() {
             className="admin__nav-btn admin__logout"
             onClick={() => { logout(); navigate('/'); }}
           >
-            <span className="admin__nav-icon">🚪</span>
+            <LogOut size={16} strokeWidth={2} className="admin__nav-icon-svg" />
             Logout
           </button>
         </nav>
@@ -311,7 +341,7 @@ export default function AdminDashboard() {
               aria-label="Toggle sidebar"
               aria-expanded={sidebarOpen}
             >
-              <span /><span /><span />
+              <Menu size={20} strokeWidth={2} />
             </button>
             <h1 className="admin__header-title">{activeSectionLabel}</h1>
           </div>
@@ -322,7 +352,7 @@ export default function AdminDashboard() {
               aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
               title={theme === 'light' ? 'Dark mode' : 'Light mode'}
             >
-              {theme === 'light' ? '🌙' : '☀️'}
+              {theme === 'light' ? <Moon size={16} strokeWidth={2} /> : <Sun size={16} strokeWidth={2} />}
             </button>
             <div className="admin__header-user">
               <div className="admin__header-avatar">{user.name.charAt(0)}</div>
@@ -339,18 +369,30 @@ export default function AdminDashboard() {
           <section className="admin__section">
             <div className="admin__section-header">
               <div>
-                <h2 className="admin__section-title">Dashboard Overview</h2>
-                <p className="admin__section-sub">Platform health at a glance</p>
+                <h2 className="admin__section-title">Overview</h2>
+                <p className="admin__section-sub">Monitor platform performance and activity</p>
+              </div>
+              <div className="admin__date-range">
+                <Calendar size={14} strokeWidth={2} className="admin__date-icon" />
+                <select
+                  className="admin__date-select"
+                  value={dateRange}
+                  onChange={e => setDateRange(e.target.value)}
+                  aria-label="Date range"
+                >
+                  {DATE_RANGES.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
+                </select>
+                <ChevronDown size={12} strokeWidth={2.5} className="admin__date-chevron" />
               </div>
             </div>
 
             <div className="admin__stats-grid">
-              <StatCard icon="📚" label="Total Resources" value={ANALYTICS.totalResources} delta="↑ 3 this month" color="#1a56db" />
-              <StatCard icon="👥" label="Registered Users" value={ANALYTICS.totalUsers.toLocaleString()} delta="↑ 124 this month" color="#10b981" />
-              <StatCard icon="⬇" label="Total Downloads" value={ANALYTICS.totalDownloads.toLocaleString()} delta="↑ 8,200 this month" color="#f59e0b" />
-              <StatCard icon="🗂" label="Categories" value={ANALYTICS.totalCategories} delta="Active" color="#8b5cf6" />
-              <StatCard icon="⭐" label="Avg. Rating" value="4.4" delta="Across all resources" color="#ec4899" />
-              <StatCard icon="📝" label="Pending Review" value="3" delta="Needs attention" color="#ef4444" />
+              <StatCard Icon={BookOpen}         label="Total Resources"  value={ANALYTICS.totalResources} delta="↑ 3 this month" color="#1a56db" />
+              <StatCard Icon={Users}            label="Registered Users" value={ANALYTICS.totalUsers.toLocaleString()} delta="↑ 124 this month" color="#10b981" />
+              <StatCard Icon={ArrowDownToLine}  label="Total Downloads"  value={ANALYTICS.totalDownloads.toLocaleString()} delta="↑ 8,200 this month" color="#f59e0b" />
+              <StatCard Icon={Layers}           label="Categories"       value={ANALYTICS.totalCategories} delta="Active" color="#8b5cf6" />
+              <StatCard Icon={Star}             label="Avg. Rating"      value="4.4" delta="Across all resources" color="#ec4899" />
+              <StatCard Icon={AlertCircle}      label="Pending Review"   value="3" delta="Needs attention" color="#ef4444" />
             </div>
 
             <div className="admin__chart-card">
@@ -457,39 +499,41 @@ export default function AdminDashboard() {
                           <td className="admin__td-muted">{r.author}</td>
                           <td>
                             <span className={`admin__status-badge admin__status-badge--${r.status}`}>
-                              {r.status === 'published' ? '● Published' : '○ Draft'}
+                              {r.status === 'published'
+                                ? <><CheckCircle size={11} strokeWidth={2.5} style={{ marginRight: 4 }} />Published</>
+                                : <><EyeOff size={11} strokeWidth={2} style={{ marginRight: 4 }} />Draft</>}
                             </span>
                           </td>
                           <td className="admin__td-num">{r.downloads.toLocaleString()}</td>
                           <td className="admin__td-muted">{r.uploadDate}</td>
                           <td>
                             <div className="admin__row-actions">
-                              <button
-                                className="admin__icon-btn"
-                                data-tip="Preview"
-                                aria-label={`Preview ${r.title}`}
+                              <ActionBtn
+                                Icon={Eye}
+                                label={`Preview ${r.title}`}
+                                tooltip="View resource"
                                 onClick={() => setPreviewResource(r)}
-                              >👁</button>
-                              <button
-                                className="admin__icon-btn"
-                                data-tip="Edit"
-                                aria-label={`Edit ${r.title}`}
+                              />
+                              <ActionBtn
+                                Icon={Pencil}
+                                label={`Edit ${r.title}`}
+                                tooltip="Edit resource"
                                 onClick={() => setEditResource(r)}
-                              >✏</button>
-                              <button
-                                className={`admin__icon-btn admin__icon-btn--toggle${r.status === 'published' ? '' : ' active'}`}
-                                data-tip={r.status === 'published' ? 'Set to Draft' : 'Publish'}
-                                aria-label={r.status === 'published' ? `Set ${r.title} to draft` : `Publish ${r.title}`}
+                              />
+                              <ActionBtn
+                                Icon={r.status === 'published' ? EyeOff : Globe}
+                                label={r.status === 'published' ? `Set ${r.title} to draft` : `Publish ${r.title}`}
+                                tooltip={r.status === 'published' ? 'Set to Draft' : 'Publish'}
+                                variant={r.status === 'published' ? 'toggle' : 'toggle-active'}
                                 onClick={() => toggleStatus(r.id)}
-                              >
-                                {r.status === 'published' ? '⬇' : '⬆'}
-                              </button>
-                              <button
-                                className="admin__icon-btn admin__icon-btn--danger"
-                                data-tip="Delete"
-                                aria-label={`Delete ${r.title}`}
+                              />
+                              <ActionBtn
+                                Icon={Trash2}
+                                label={`Delete ${r.title}`}
+                                tooltip="Delete resource"
+                                variant="danger"
                                 onClick={() => setConfirmDelete({ id: r.id, title: r.title })}
-                              >🗑</button>
+                              />
                             </div>
                           </td>
                         </tr>
@@ -597,7 +641,8 @@ export default function AdminDashboard() {
               <div className="admin__upload-footer">
                 <button type="button" className="btn btn--outline" onClick={() => { setUploadForm(INITIAL_UPLOAD); setUploadErrors({}); }}>Reset</button>
                 <button type="submit" className="btn btn--primary btn--lg" disabled={uploadLoading}>
-                  {uploadLoading ? <span className="admin__spinner" /> : '⬆'} {uploadLoading ? 'Uploading…' : 'Upload Resource'}
+                  {uploadLoading ? <span className="admin__spinner" /> : <Upload size={15} strokeWidth={2} style={{ display: 'inline', verticalAlign: 'middle' }} />}
+                  {' '}{uploadLoading ? 'Uploading…' : 'Upload Resource'}
                 </button>
               </div>
             </form>
@@ -671,11 +716,15 @@ export default function AdminDashboard() {
                           <td><span className={`status-tag status-tag--${u.status}`}>{u.status}</span></td>
                           <td>
                             <button
-                              className={`admin__icon-btn${u.status === 'active' ? ' admin__icon-btn--danger' : ' admin__icon-btn--success'}`}
-                              title={u.status === 'active' ? 'Disable account' : 'Enable account'}
-                              onClick={() => toggleUserStatus(u.id)}
-                            >
-                              {u.status === 'active' ? '🚫' : '✅'}
+                                className={`admin__action-btn${u.status === 'active' ? ' admin__action-btn--danger' : ' admin__action-btn--success'}`}
+                                title={u.status === 'active' ? 'Disable account' : 'Enable account'}
+                                aria-label={u.status === 'active' ? `Disable ${u.name}` : `Enable ${u.name}`}
+                                data-tip={u.status === 'active' ? 'Disable account' : 'Enable account'}
+                                onClick={() => toggleUserStatus(u.id)}
+                              >
+                                {u.status === 'active'
+                                  ? <EyeOff size={15} strokeWidth={2} />
+                                  : <CheckCircle size={15} strokeWidth={2} />}
                             </button>
                           </td>
                         </tr>
@@ -698,10 +747,10 @@ export default function AdminDashboard() {
             </div>
 
             <div className="admin__stats-grid">
-              <StatCard icon="⬇" label="Total Downloads" value={ANALYTICS.totalDownloads.toLocaleString()} delta="All time" color="#1a56db" />
-              <StatCard icon="📅" label="This Month" value="12,400" delta="↑ 14% vs last month" color="#10b981" />
-              <StatCard icon="👁" label="Page Views" value="98,230" delta="↑ 22% this month" color="#f59e0b" />
-              <StatCard icon="🔄" label="Return Rate" value="68%" delta="Users coming back" color="#8b5cf6" />
+              <StatCard Icon={ArrowDownToLine} label="Total Downloads" value={ANALYTICS.totalDownloads.toLocaleString()} delta="All time" color="#1a56db" />
+              <StatCard Icon={Calendar}        label="This Month"      value="12,400" delta="↑ 14% vs last month" color="#10b981" />
+              <StatCard Icon={Eye}             label="Page Views"      value="98,230" delta="↑ 22% this month" color="#f59e0b" />
+              <StatCard Icon={CheckCircle}     label="Return Rate"     value="68%" delta="Users coming back" color="#8b5cf6" />
             </div>
 
             <div className="admin__chart-card">
