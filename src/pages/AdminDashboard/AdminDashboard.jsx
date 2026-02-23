@@ -7,6 +7,7 @@ import ResourcePreviewModal from '../../components/admin/ResourcePreviewModal';
 import EditResourceModal from '../../components/admin/EditResourceModal';
 import ConfirmDialog from '../../components/admin/ConfirmDialog';
 import RecentActivity from '../../components/admin/RecentActivity';
+import AdminPageHeader from '../../components/admin/AdminPageHeader';
 import {
   LayoutDashboard, BookOpen, Upload, Users, BarChart2, Settings, LogOut,
   ShieldCheck, Menu, Sun, Moon, Eye, Pencil, Globe, EyeOff, Trash2,
@@ -354,24 +355,16 @@ export default function AdminDashboard() {
             >
               {theme === 'light' ? <Moon size={16} strokeWidth={2} /> : <Sun size={16} strokeWidth={2} />}
             </button>
-            <div className="admin__header-user">
-              <div className="admin__header-avatar">{user.name.charAt(0)}</div>
-              <div>
-                <div className="admin__header-name">{user.name}</div>
-                <div className="admin__header-role">Administrator</div>
-              </div>
-            </div>
           </div>
         </header>
 
         {/* ── OVERVIEW ── */}
         {activeSection === 'overview' && (
           <section className="admin__section">
-            <div className="admin__section-header">
-              <div>
-                <h2 className="admin__section-title">Overview</h2>
-                <p className="admin__section-sub">Monitor platform performance and activity</p>
-              </div>
+            <AdminPageHeader
+              title="Overview"
+              subtitle="Monitor platform performance and activity"
+            >
               <div className="admin__date-range">
                 <Calendar size={14} strokeWidth={2} className="admin__date-icon" />
                 <select
@@ -384,7 +377,7 @@ export default function AdminDashboard() {
                 </select>
                 <ChevronDown size={12} strokeWidth={2.5} className="admin__date-chevron" />
               </div>
-            </div>
+            </AdminPageHeader>
 
             <div className="admin__stats-grid">
               <StatCard Icon={BookOpen}         label="Total Resources"  value={ANALYTICS.totalResources} delta="↑ 3 this month" color="#1a56db" />
@@ -443,11 +436,10 @@ export default function AdminDashboard() {
         {/* ── RESOURCES ── */}
         {activeSection === 'resources' && (
           <section className="admin__section">
-            <div className="admin__section-header">
-              <div>
-                <h2 className="admin__section-title">Manage Resources</h2>
-                <p className="admin__section-sub">{resources.length} resources total · {resources.filter(r => r.status === 'published').length} published</p>
-              </div>
+            <AdminPageHeader
+              title="Manage Resources"
+              subtitle={`${resources.length} resources total · ${resources.filter(r => r.status === 'published').length} published`}
+            >
               <div className="admin__section-actions">
                 <input
                   className="admin__search-input form-input"
@@ -457,7 +449,7 @@ export default function AdminDashboard() {
                 />
                 <button className="btn btn--primary btn--sm" onClick={() => handleNavClick('upload')}>+ Upload</button>
               </div>
-            </div>
+            </AdminPageHeader>
 
             <div className="admin__table-wrap">
               <table className="admin__table">
@@ -548,12 +540,10 @@ export default function AdminDashboard() {
         {/* ── UPLOAD ── */}
         {activeSection === 'upload' && (
           <section className="admin__section">
-            <div className="admin__section-header">
-              <div>
-                <h2 className="admin__section-title">Upload New Resource</h2>
-                <p className="admin__section-sub">Add a new document to the ReadSpace library</p>
-              </div>
-            </div>
+            <AdminPageHeader
+              title="Upload New Resource"
+              subtitle="Add a new document to the ReadSpace library"
+            />
 
             <form className="admin__upload-form" onSubmit={handleUpload} noValidate>
               <p className="admin__form-section-heading">Basic Information</p>
@@ -652,11 +642,10 @@ export default function AdminDashboard() {
         {/* ── USERS ── */}
         {activeSection === 'users' && (
           <section className="admin__section">
-            <div className="admin__section-header">
-              <div>
-                <h2 className="admin__section-title">User Management</h2>
-                <p className="admin__section-sub">{users.length} users · {users.filter(u => u.status === 'active').length} active</p>
-              </div>
+            <AdminPageHeader
+              title="User Management"
+              subtitle={`${users.length} users · ${users.filter(u => u.status === 'active').length} active`}
+            >
               <div className="admin__section-actions">
                 <input
                   className="admin__search-input form-input"
@@ -665,7 +654,7 @@ export default function AdminDashboard() {
                   onChange={e => setUsrSearch(e.target.value)}
                 />
               </div>
-            </div>
+            </AdminPageHeader>
 
             <div className="admin__table-wrap">
               <table className="admin__table">
@@ -739,12 +728,10 @@ export default function AdminDashboard() {
         {/* ── ANALYTICS ── */}
         {activeSection === 'analytics' && (
           <section className="admin__section">
-            <div className="admin__section-header">
-              <div>
-                <h2 className="admin__section-title">Analytics</h2>
-                <p className="admin__section-sub">Usage trends and content performance</p>
-              </div>
-            </div>
+            <AdminPageHeader
+              title="Analytics"
+              subtitle="Usage trends and content performance"
+            />
 
             <div className="admin__stats-grid">
               <StatCard Icon={ArrowDownToLine} label="Total Downloads" value={ANALYTICS.totalDownloads.toLocaleString()} delta="All time" color="#1a56db" />
@@ -792,12 +779,10 @@ export default function AdminDashboard() {
         {/* ── SETTINGS ── */}
         {activeSection === 'settings' && (
           <section className="admin__section">
-            <div className="admin__section-header">
-              <div>
-                <h2 className="admin__section-title">Platform Settings</h2>
-                <p className="admin__section-sub">Configure global ReadSpace behaviour</p>
-              </div>
-            </div>
+            <AdminPageHeader
+              title="Platform Settings"
+              subtitle="Configure global ReadSpace behaviour"
+            />
 
             <form className="admin__upload-form" onSubmit={e => { e.preventDefault(); showToast('Settings saved.'); }} style={{ maxWidth: 560 }}>
               <p className="admin__form-section-heading">General</p>
