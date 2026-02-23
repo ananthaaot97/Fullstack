@@ -7,10 +7,11 @@ import EditResourceModal from '../../components/admin/EditResourceModal';
 import ConfirmDialog from '../../components/admin/ConfirmDialog';
 import RecentActivity from '../../components/admin/RecentActivity';
 import AdminPageHeader from '../../components/admin/AdminPageHeader';
+import Select from '../../components/ui/Select';
 import {
   LayoutDashboard, BookOpen, Upload, Users, BarChart2, Settings, LogOut,
   ShieldCheck, Menu, Eye, Pencil, Globe, EyeOff, Trash2,
-  ArrowDownToLine, Layers, Star, AlertCircle, Calendar, ChevronDown, X,
+  ArrowDownToLine, Layers, Star, AlertCircle, Calendar, X,
   CheckCircle,
 } from 'lucide-react';
 import './AdminDashboard.css';
@@ -348,18 +349,14 @@ export default function AdminDashboard() {
               title="Overview"
               subtitle="Monitor platform performance and activity"
             >
-              <div className="admin__date-range">
-                <Calendar size={14} strokeWidth={2} className="admin__date-icon" />
-                <select
-                  className="admin__date-select"
-                  value={dateRange}
-                  onChange={e => setDateRange(e.target.value)}
-                  aria-label="Date range"
-                >
-                  {DATE_RANGES.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
-                </select>
-                <ChevronDown size={12} strokeWidth={2.5} className="admin__date-chevron" />
-              </div>
+              <Select
+                value={dateRange}
+                onChange={setDateRange}
+                options={DATE_RANGES}
+                label="Date range"
+                LeadIcon={Calendar}
+                compact
+              />
             </AdminPageHeader>
 
             <div className="admin__stats-grid">
@@ -556,12 +553,17 @@ export default function AdminDashboard() {
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label admin__form-group-label">Category</label>
-                  <select className="form-input form-select" value={uploadForm.category} onChange={e => setUploadForm(f => ({ ...f, category: e.target.value }))}>
-                    <option value="textbooks">Textbook</option>
-                    <option value="research">Research Paper</option>
-                    <option value="guides">Study Guide</option>
-                    <option value="tutorials">Tutorial</option>
-                  </select>
+                  <Select
+                    value={uploadForm.category}
+                    onChange={v => setUploadForm(f => ({...f, category: v}))}
+                    options={[
+                      {value:'textbooks', label:'Textbook'},
+                      {value:'research',  label:'Research Paper'},
+                      {value:'guides',    label:'Study Guide'},
+                      {value:'tutorials', label:'Tutorial'},
+                    ]}
+                    label="Category"
+                  />
                 </div>
                 <div className="form-group">
                   <label className="form-label admin__form-group-label">Publication Year</label>
@@ -576,10 +578,15 @@ export default function AdminDashboard() {
                 </div>
                 <div className="form-group">
                   <label className="form-label admin__form-group-label">Status</label>
-                  <select className="form-input form-select" value={uploadForm.status} onChange={e => setUploadForm(f => ({ ...f, status: e.target.value }))}>
-                    <option value="draft">Draft (hidden)</option>
-                    <option value="published">Published (live)</option>
-                  </select>
+                  <Select
+                    value={uploadForm.status}
+                    onChange={v => setUploadForm(f => ({...f, status: v}))}
+                    options={[
+                      {value:'draft',     label:'Draft (hidden)'},
+                      {value:'published', label:'Published (live)'},
+                    ]}
+                    label="Status"
+                  />
                 </div>
               </div>
 
@@ -673,15 +680,17 @@ export default function AdminDashboard() {
                           </td>
                           <td className="admin__td-muted">{u.email}</td>
                           <td>
-                            <select
-                              className="admin__role-select"
+                            <Select
                               value={u.role}
-                              onChange={e => changeRole(u.id, e.target.value)}
-                            >
-                              <option value="student">Student</option>
-                              <option value="faculty">Faculty</option>
-                              <option value="admin">Admin</option>
-                            </select>
+                              onChange={role => changeRole(u.id, role)}
+                              options={[
+                                {value:'student', label:'Student'},
+                                {value:'faculty', label:'Faculty'},
+                                {value:'admin',   label:'Admin'},
+                              ]}
+                              label={`Role for ${u.name}`}
+                              size="sm"
+                            />
                           </td>
                           <td className="admin__td-muted">{u.joined}</td>
                           <td className="admin__td-num">{u.downloads}</td>
@@ -782,12 +791,17 @@ export default function AdminDashboard() {
                 </div>
                 <div className="form-group">
                   <label className="form-label admin__form-group-label">Default Category</label>
-                  <select className="form-input form-select" value={settings.defaultCategory} onChange={e => setSettings(s => ({ ...s, defaultCategory: e.target.value }))}>
-                    <option value="textbooks">Textbooks</option>
-                    <option value="research">Research Papers</option>
-                    <option value="guides">Study Guides</option>
-                    <option value="tutorials">Tutorials</option>
-                  </select>
+                  <Select
+                    value={settings.defaultCategory}
+                    onChange={v => setSettings(s => ({...s, defaultCategory: v}))}
+                    options={[
+                      {value:'textbooks', label:'Textbooks'},
+                      {value:'research',  label:'Research Papers'},
+                      {value:'guides',    label:'Study Guides'},
+                      {value:'tutorials', label:'Tutorials'},
+                    ]}
+                    label="Default category"
+                  />
                 </div>
               </div>
 
