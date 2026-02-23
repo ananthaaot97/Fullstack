@@ -92,11 +92,11 @@ const DATE_RANGES = [
 ];
 
 const INITIAL_ACTIVITIES = [
-  { id: 1, icon: '📚', text: 'Resource "Introduction to Algorithms" published', type: 'success', time: '09:14' },
-  { id: 2, icon: '👤', text: 'New user Ananya Sharma registered', type: 'info',    time: '08:52' },
-  { id: 3, icon: '⬇', text: '"React & Next.js Tutorial" downloaded 50× today',   type: 'info',    time: '08:30' },
-  { id: 4, icon: '✏', text: 'Resource "Deep Learning with Python" edited',        type: 'warning', time: 'Yesterday' },
-  { id: 5, icon: '🚫', text: 'User Vikram Singh account disabled',                type: 'error',   time: 'Yesterday' },
+  { id: 1, iconType: 'upload',        text: 'Resource "Introduction to Algorithms" published', type: 'success', time: '09:14' },
+  { id: 2, iconType: 'user_register', text: 'New user Ananya Sharma registered',               type: 'info',    time: '08:52' },
+  { id: 3, iconType: 'download',      text: '"React & Next.js Tutorial" downloaded 50× today', type: 'info',    time: '08:30' },
+  { id: 4, iconType: 'edit',          text: 'Resource "Deep Learning with Python" edited',     type: 'warning', time: 'Yesterday' },
+  { id: 5, iconType: 'user_disable',  text: 'User Vikram Singh account disabled',              type: 'error',   time: 'Yesterday' },
 ];
 
 export default function AdminDashboard() {
@@ -166,10 +166,10 @@ export default function AdminDashboard() {
     setToast({ message, type, key: toastCounter.current });
   };
 
-  const addActivity = (text, icon, type = 'info') => {
+  const addActivity = (text, iconType = 'default', type = 'info') => {
     activityCounter.current += 1;
     const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    setActivities(prev => [{ id: activityCounter.current, icon, text, type, time: now }, ...prev].slice(0, 20));
+    setActivities(prev => [{ id: activityCounter.current, iconType, text, type, time: now, isNew: true }, ...prev].slice(0, 20));
   };
 
   const handleNavClick = (id) => {
@@ -186,14 +186,14 @@ export default function AdminDashboard() {
     const newStatus = res?.status === 'published' ? 'draft' : 'published';
     setResources(rs => rs.map(r => r.id === id ? { ...r, status: newStatus } : r));
     showToast(`Resource set to ${newStatus}.`);
-    if (res) addActivity(`"${res.title}" set to ${newStatus}`, newStatus === 'published' ? '✅' : '⬇', newStatus === 'published' ? 'success' : 'warning');
+    if (res) addActivity(`"${res.title}" set to ${newStatus}`, newStatus === 'published' ? 'status_pub' : 'status_draft', newStatus === 'published' ? 'success' : 'warning');
   };
 
   const handleConfirmDelete = () => {
     if (!confirmDelete) return;
     setResources(rs => rs.filter(r => r.id !== confirmDelete.id));
     showToast(`"${confirmDelete.title}" deleted.`, 'error');
-    addActivity(`Resource "${confirmDelete.title}" deleted`, '🗑', 'error');
+    addActivity(`Resource "${confirmDelete.title}" deleted`, 'delete', 'error');
     setConfirmDelete(null);
   };
 
@@ -201,7 +201,7 @@ export default function AdminDashboard() {
     setResources(rs => rs.map(r => r.id === updated.id ? updated : r));
     setEditResource(null);
     showToast(`"${updated.title}" updated successfully.`);
-    addActivity(`Resource "${updated.title}" edited`, '✏', 'warning');
+    addActivity(`Resource "${updated.title}" edited`, 'edit', 'warning');
   };
 
   const filteredResources = resources.filter(r =>
@@ -215,14 +215,14 @@ export default function AdminDashboard() {
     const newStatus = u?.status === 'active' ? 'inactive' : 'active';
     setUsers(us => us.map(u => u.id === id ? { ...u, status: newStatus } : u));
     showToast('User status updated.');
-    if (u) addActivity(`User "${u.name}" ${newStatus === 'active' ? 'enabled' : 'disabled'}`, newStatus === 'active' ? '✅' : '🚫', newStatus === 'active' ? 'success' : 'error');
+    if (u) addActivity(`User "${u.name}" ${newStatus === 'active' ? 'enabled' : 'disabled'}`, newStatus === 'active' ? 'user_enable' : 'user_disable', newStatus === 'active' ? 'success' : 'error');
   };
 
   const changeRole = (id, role) => {
     const u = users.find(u => u.id === id);
     setUsers(us => us.map(u => u.id === id ? { ...u, role } : u));
     showToast('Role updated.');
-    if (u) addActivity(`User "${u.name}" role changed to ${role}`, '👤', 'info');
+    if (u) addActivity(`User "${u.name}" role changed to ${role}`, 'role_change', 'info');
   };
 
   const filteredUsers = users.filter(u =>
@@ -247,7 +247,7 @@ export default function AdminDashboard() {
     setUploadLoading(true);
     await new Promise(r => setTimeout(r, 1200));
     setUploadLoading(false);
-    addActivity(`Resource "${uploadForm.title}" uploaded`, '📚', 'success');
+    addActivity(`Resource "${uploadForm.title}" uploaded`, 'upload', 'success');
     setUploadForm(INITIAL_UPLOAD);
     showToast('Resource uploaded successfully!');
   };
@@ -395,6 +395,8 @@ export default function AdminDashboard() {
               <StatCard Icon={AlertCircle}      label="Pending Review"   value="3" delta="Needs attention" color="#ef4444" />
             </div>
 
+            <RecentActivity activities={activities} />
+
             <div className="admin__chart-card">
               <h3 className="admin__chart-title">Monthly Downloads</h3>
               <div className="admin__bar-chart">
@@ -411,8 +413,6 @@ export default function AdminDashboard() {
                 ))}
               </div>
             </div>
-
-            <RecentActivity activities={activities} />
 
             <div className="admin__quick-table-wrap">
               <h3 className="admin__qt-title">Top 5 Resources by Downloads</h3>
