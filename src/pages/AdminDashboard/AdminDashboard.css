@@ -16,27 +16,18 @@
 }
 
 .admin__brand {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: #fff;
   padding: 0.65rem 0.75rem;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
   background: rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  letter-spacing: -0.01em;
   transition: background 150ms ease, border-color 150ms ease;
   cursor: default;
 }
 .admin__brand:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.14);
-}
-.admin__brand strong {
-  color: #93c5fd;
-  font-weight: 900;
 }
 
 .admin__nav { display: flex; flex-direction: column; gap: 0.25rem; flex: 1; }
@@ -235,14 +226,6 @@
   width: 16px;
   height: 16px;
   margin-right: 0.5rem;
-}
-.admin__brand-icon-svg {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: #93c5fd;
-  filter: drop-shadow(0 0 6px rgba(147, 197, 253, 0.4));
 }
 
 

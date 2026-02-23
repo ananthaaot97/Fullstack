@@ -8,9 +8,10 @@ import ConfirmDialog from '../../components/admin/ConfirmDialog';
 import RecentActivity from '../../components/admin/RecentActivity';
 import AdminPageHeader from '../../components/admin/AdminPageHeader';
 import Select from '../../components/ui/Select';
+import BrandLogo from '../../components/brand/BrandLogo';
 import {
   LayoutDashboard, BookOpen, Upload, Users, BarChart2, Settings, LogOut,
-  ShieldCheck, Menu, Eye, Pencil, Globe, EyeOff, Trash2,
+  Menu, Eye, Pencil, Globe, EyeOff, Trash2,
   ArrowDownToLine, Layers, Star, AlertCircle, Calendar, X,
   CheckCircle,
 } from 'lucide-react';
@@ -304,8 +305,7 @@ export default function AdminDashboard() {
       {/* Sidebar */}
       <aside className={`admin__sidebar${sidebarOpen ? ' admin__sidebar--open' : ''}`}>
         <div className="admin__brand">
-          <ShieldCheck size={20} strokeWidth={2} className="admin__brand-icon-svg" />
-          <span>Read<strong>Space</strong></span>
+          <BrandLogo variant="sidebar" size="md" />
         </div>
         <nav className="admin__nav">
           {SECTIONS.map(s => (

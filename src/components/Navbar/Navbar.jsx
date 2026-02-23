@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import BrandLogo from '../brand/BrandLogo';
 import './Navbar.css';
 
 /* Sun icon – shown in dark mode to switch to light */
@@ -57,11 +58,8 @@ export default function Navbar() {
     <nav className={`navbar${scrolled ? ' navbar--scrolled' : ''}`}>
       <div className="container navbar__inner">
         {/* Logo */}
-        <Link to="/" className="navbar__logo" onClick={closeMenu}>
-          <span className="navbar__logo-icon">📚</span>
-          <span className="navbar__logo-text">
-            Read<strong>Space</strong>
-          </span>
+        <Link to="/" className="navbar__logo" onClick={closeMenu} aria-label="ReadSpace — home">
+          <BrandLogo size="md" />
         </Link>
 
         {/* Theme toggle */}

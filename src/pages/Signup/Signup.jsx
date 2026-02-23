@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import BrandLogo from '../../components/brand/BrandLogo';
 import '../Login/Auth.css';
 
 export default function Signup() {
@@ -10,7 +11,10 @@ export default function Signup() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = e => {
+    setError('');
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,16 +29,26 @@ export default function Signup() {
     else setError(result.error);
   };
 
+  // Determine which fields to highlight in red
+  const pwError = error && /password/i.test(error);
+
   return (
     <main className="auth-page">
       <div className="auth-card">
-        <div className="auth-card__logo">📚</div>
+        <div className="auth-card__logo">
+          <BrandLogo size="lg" />
+        </div>
         <h1 className="auth-card__title">Create Account</h1>
-        <p className="auth-card__sub">Join ReadSpace – it's free forever</p>
+        <p className="auth-card__sub">Join ReadSpace — it&apos;s free forever</p>
 
-        {error && <div className="auth-error" role="alert">⚠️ {error}</div>}
+        {error && (
+          <div className="auth-error" role="alert" aria-live="assertive">
+            <span className="auth-error__icon" aria-hidden="true">⚠</span>
+            {error}
+          </div>
+        )}
 
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="form-group">
             <label className="form-label" htmlFor="name">Full Name</label>
             <input id="name" name="name" type="text" className="form-input" placeholder="Jane Smith" value={form.name} onChange={handleChange} required />
@@ -45,14 +59,26 @@ export default function Signup() {
           </div>
           <div className="form-group">
             <label className="form-label" htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" className="form-input" placeholder="Min. 6 characters" value={form.password} onChange={handleChange} required />
+            <input
+              id="password" name="password" type="password"
+              className={`form-input${pwError ? ' form-input--error' : ''}`}
+              placeholder="Min. 6 characters"
+              value={form.password} onChange={handleChange} required
+              aria-invalid={pwError || undefined}
+            />
           </div>
           <div className="form-group">
             <label className="form-label" htmlFor="confirm">Confirm Password</label>
-            <input id="confirm" name="confirm" type="password" className="form-input" placeholder="Repeat password" value={form.confirm} onChange={handleChange} required />
+            <input
+              id="confirm" name="confirm" type="password"
+              className={`form-input${pwError ? ' form-input--error' : ''}`}
+              placeholder="Repeat password"
+              value={form.confirm} onChange={handleChange} required
+              aria-invalid={pwError || undefined}
+            />
           </div>
           <button type="submit" className="btn btn--primary btn--full btn--lg" disabled={loading}>
-            {loading ? '⏳ Creating account…' : 'Create Account'}
+            {loading ? 'Creating account…' : 'Create Account'}
           </button>
         </form>
 

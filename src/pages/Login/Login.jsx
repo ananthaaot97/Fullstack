@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import BrandLogo from '../../components/brand/BrandLogo';
 import './Auth.css';
 
 export default function Login() {
@@ -10,7 +11,10 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = e => {
+    setError('');
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,34 +39,43 @@ export default function Login() {
   return (
     <main className="auth-page">
       <div className="auth-card">
-        <div className="auth-card__logo">📚</div>
-        <h1 className="auth-card__title">Welcome Back</h1>
+        <div className="auth-card__logo">
+          <BrandLogo size="lg" />
+        </div>
+        <h1 className="auth-card__title">Welcome back</h1>
         <p className="auth-card__sub">Sign in to your ReadSpace account</p>
 
         <div className="auth-demo-btns">
           <button className="btn btn--secondary btn--sm" onClick={() => fillDemo('student')}>
-            👤 Demo Student
+            Demo Student
           </button>
           <button className="btn btn--secondary btn--sm" onClick={() => fillDemo('admin')}>
-            🛡 Demo Admin
+            Demo Admin
           </button>
         </div>
 
-        {error && <div className="auth-error" role="alert">⚠️ {error}</div>}
+        {error && (
+          <div className="auth-error" role="alert" aria-live="assertive">
+            <span className="auth-error__icon" aria-hidden="true">⚠</span>
+            {error}
+          </div>
+        )}
 
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="form-group">
             <label className="form-label" htmlFor="email">Email address</label>
             <input
               id="email"
               name="email"
               type="email"
-              className="form-input"
+              className={`form-input${error ? ' form-input--error' : ''}`}
               placeholder="you@example.com"
               value={form.email}
               onChange={handleChange}
               required
               autoComplete="email"
+              aria-invalid={!!error}
+              aria-describedby={error ? 'login-error' : undefined}
             />
           </div>
           <div className="form-group">
@@ -71,16 +84,18 @@ export default function Login() {
               id="password"
               name="password"
               type="password"
-              className="form-input"
+              className={`form-input${error ? ' form-input--error' : ''}`}
               placeholder="••••••••"
               value={form.password}
               onChange={handleChange}
               required
               autoComplete="current-password"
+              aria-invalid={!!error}
+              aria-describedby={error ? 'login-error' : undefined}
             />
           </div>
           <button type="submit" className="btn btn--primary btn--full btn--lg" disabled={loading}>
-            {loading ? '⏳ Signing in…' : 'Sign In'}
+            {loading ? 'Signing in…' : 'Sign In'}
           </button>
         </form>
 
