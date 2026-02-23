@@ -10,7 +10,7 @@ export default function HeroSection() {
       <div className="hero__bg-shape hero__bg-shape--2" aria-hidden />
 
       <div className="container hero__content">
-        <div className="hero__badge">📖 Open Educational Resources • FSAD-PS28</div>
+        <div className="hero__badge">📖 Open Educational Resources</div>
 
         <h1 className="hero__title">
           Knowledge is <span className="hero__title-accent">Free</span> for Everyone

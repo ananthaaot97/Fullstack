@@ -60,7 +60,7 @@ export default function Navbar() {
         <Link to="/" className="navbar__logo" onClick={closeMenu}>
           <span className="navbar__logo-icon">📚</span>
           <span className="navbar__logo-text">
-            Library <strong>Freedom</strong>
+            Read<strong>Space</strong>
           </span>
         </Link>
 

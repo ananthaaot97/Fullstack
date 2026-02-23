@@ -37,7 +37,7 @@ export default function Login() {
       <div className="auth-card">
         <div className="auth-card__logo">📚</div>
         <h1 className="auth-card__title">Welcome Back</h1>
-        <p className="auth-card__sub">Sign in to your Library Freedom account</p>
+        <p className="auth-card__sub">Sign in to your ReadSpace account</p>
 
         <div className="auth-demo-btns">
           <button className="btn btn--secondary btn--sm" onClick={() => fillDemo('student')}>

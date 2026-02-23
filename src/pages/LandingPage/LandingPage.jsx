@@ -14,13 +14,13 @@ const FEATURES = [
 const TESTIMONIALS = [
   {
     initial: 'A',
-    quote: 'Library Freedom saved my final year project. I found everything I needed — from algorithms textbooks to the original Transformer paper — all in one place.',
+    quote: 'ReadSpace saved my final year project. I found everything I needed — from algorithms textbooks to the original Transformer paper — all in one place.',
     name: 'Ananya Sharma',
     role: 'Final Year CS Student',
   },
   {
     initial: 'P',
-    quote: 'As a faculty member, I recommend Library Freedom to all my students. The quality of curated resources is exceptional and the interface is incredibly intuitive.',
+    quote: 'As a faculty member, I recommend ReadSpace to all my students. The quality of curated resources is exceptional and the interface is incredibly intuitive.',
     name: 'Prof. Priya Nair',
     role: 'Associate Professor, AIML Dept.',
   },
@@ -48,7 +48,7 @@ export default function LandingPage() {
 
         <div className="container landing__hero-content">
           <div className="landing__hero-badge">
-            Open Educational Resources · FSAD-PS28
+            Open Educational Resources
           </div>
 
           <h1 className="landing__hero-title">
@@ -57,7 +57,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="landing__hero-subtitle">
-            Library Freedom is a professional open-access hub for students, researchers
+            ReadSpace is a professional open-access hub for students, researchers
             and educators. Browse curated textbooks, research papers, study guides and
             tutorials — all free, all in one place.
           </p>
@@ -101,12 +101,12 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Why Library Freedom (Features) ── */}
+      {/* ── Why ReadSpace (Features) ── */}
       <section className="landing__features">
         <div className="container">
           <ScrollReveal variant="fade-up">
             <div className="landing__section-header">
-              <h2 className="landing__section-title">Why Library Freedom?</h2>
+              <h2 className="landing__section-title">Why ReadSpace?</h2>
               <p className="landing__section-sub">
                 Built for students, researchers, and educators who believe knowledge
                 should be accessible to everyone.

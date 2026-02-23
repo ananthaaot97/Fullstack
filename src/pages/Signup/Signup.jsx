@@ -30,7 +30,7 @@ export default function Signup() {
       <div className="auth-card">
         <div className="auth-card__logo">📚</div>
         <h1 className="auth-card__title">Create Account</h1>
-        <p className="auth-card__sub">Join Library Freedom – it's free forever</p>
+        <p className="auth-card__sub">Join ReadSpace – it's free forever</p>
 
         {error && <div className="auth-error" role="alert">⚠️ {error}</div>}
 

@@ -1,4 +1,4 @@
-// ===== Library Freedom – Mock Data =====
+// ===== ReadSpace – Mock Data =====
 
 export const CATEGORIES = [
   { id: 'all',       label: 'All',             icon: '📚' },
@@ -80,7 +80,7 @@ export const RESOURCES = [
   {
     id: 5,
     title: 'Data Structures & Algorithms – Study Guide',
-    author: 'Library Freedom Editorial',
+    author: 'ReadSpace Editorial',
     category: 'guides',
     categoryLabel: 'Study Guide',
     description: 'Concise revision notes covering arrays, linked lists, trees, graphs, sorting and dynamic programming with worked examples.',
@@ -97,7 +97,7 @@ export const RESOURCES = [
   {
     id: 6,
     title: 'React & Next.js Full-Stack Tutorial',
-    author: 'Library Freedom Team',
+    author: 'ReadSpace Team',
     category: 'tutorials',
     categoryLabel: 'Tutorial',
     description: 'Step-by-step video-companion guide covering React hooks, state management, routing and server-side rendering with Next.js.',
@@ -148,7 +148,7 @@ export const RESOURCES = [
   {
     id: 9,
     title: 'Machine Learning Crash Course – Study Guide',
-    author: 'Library Freedom Editorial',
+    author: 'ReadSpace Editorial',
     category: 'guides',
     categoryLabel: 'Study Guide',
     description: 'Quick-start revision notes on supervised learning, neural networks, evaluation metrics and scikit-learn workflows.',
@@ -165,7 +165,7 @@ export const RESOURCES = [
   {
     id: 10,
     title: 'Database Design & SQL – Tutorial',
-    author: 'Library Freedom Team',
+    author: 'ReadSpace Team',
     category: 'tutorials',
     categoryLabel: 'Tutorial',
     description: 'Hands-on tutorial covering relational database design, normalisation, SQL queries, indexes and transactions.',
@@ -199,7 +199,7 @@ export const RESOURCES = [
   {
     id: 12,
     title: 'Cybersecurity Fundamentals – Study Guide',
-    author: 'Library Freedom Editorial',
+    author: 'ReadSpace Editorial',
     category: 'guides',
     categoryLabel: 'Study Guide',
     description: 'Comprehensive guide covering network security, cryptography, ethical hacking, OWASP Top 10 and incident response.',

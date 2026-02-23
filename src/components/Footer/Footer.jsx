@@ -6,8 +6,8 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer__inner">
         <div className="footer__brand">
-          <span className="footer__logo">📚 Library <strong>Freedom</strong></span>
-          <p>An open educational resource hub for students, researchers and educators. Project FSAD-PS28.</p>
+          <span className="footer__logo">📚 Read<strong>Space</strong></span>
+          <p>An open educational resource hub for students, researchers and educators.</p>
         </div>
 
         <div className="footer__col">
@@ -35,7 +35,7 @@ export default function Footer() {
       </div>
 
       <div className="footer__bottom">
-        <span>© {new Date().getFullYear()} Library Freedom – FSAD-PS28. All rights reserved.</span>
+        <span>© {new Date().getFullYear()} ReadSpace. All rights reserved.</span>
         <span>Built with React + Vite</span>
       </div>
     </footer>
