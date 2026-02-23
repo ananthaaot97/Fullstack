@@ -41,7 +41,7 @@
   border-radius: var(--radius-md);
   font-size: 0.875rem;
   font-weight: 500;
-  color: #94a3b8;
+  color: var(--color-admin-sidebar-fg);
   cursor: pointer;
   transition: background var(--transition), color var(--transition);
 }
@@ -633,14 +633,11 @@
 .admin__switch input:checked + .admin__switch-track::before { transform: translateX(20px); }
 
 /* ── Dark mode overrides for new elements ── */
-[data-theme="dark"] .admin-toast--success { background: rgba(52,211,153,0.15); border-color: rgba(52,211,153,0.3); color: #34d399; }
-[data-theme="dark"] .admin-toast--error   { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); color: #f87171; }
-[data-theme="dark"] .admin__status-badge--published { background: rgba(16,185,129,0.15); color: #34d399; }
-[data-theme="dark"] .admin__status-badge--draft     { background: var(--color-surface-2); }
+/* (consolidated into main dark-mode block above) */
 [data-theme="dark"] .admin__icon-btn { background: var(--color-surface-2); }
 [data-theme="dark"] .admin__action-btn { background: var(--color-surface-2); }
 [data-theme="dark"] .admin__switch-track { background: #334155; }
-[data-theme="dark"] .admin__cat-bar-bg { background: #1e293b; }
+[data-theme="dark"] .admin__cat-bar-bg { background: var(--color-admin-sidebar); }
 [data-theme="dark"] .adm-activity__badge--success { background: rgba(16,185,129,0.15); color: #34d399; }
 [data-theme="dark"] .adm-activity__badge--error   { background: rgba(239,68,68,0.15);  color: #f87171; }
 [data-theme="dark"] .adm-activity__badge--warning { background: rgba(245,158,11,0.15); color: #fbbf24; }
