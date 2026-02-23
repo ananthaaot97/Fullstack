@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
 import ResourceCard from '../../components/ResourceCard/ResourceCard';
 import PreviewModal from '../../components/PreviewModal/PreviewModal';
 import FeedbackForm from '../../components/FeedbackForm/FeedbackForm';
+import BrandLogo from '../../components/brand/BrandLogo';
 import { RESOURCES } from '../../data/mockData';
 import './UserDashboard.css';
 
@@ -44,6 +45,9 @@ export default function UserDashboard() {
     <main className="dashboard">
       {/* Sidebar */}
       <aside className="dashboard__sidebar">
+        <Link to="/" className="dashboard__brand">
+          <BrandLogo size="sm" />
+        </Link>
         <div className="dashboard__profile">
           <div className="dashboard__avatar">{user.name.charAt(0).toUpperCase()}</div>
           <div>

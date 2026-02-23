@@ -7,8 +7,8 @@
 .admin__sidebar {
   width: 240px;
   flex-shrink: 0;
-  background: #0f172a;
-  color: #94a3b8;
+  background: var(--color-admin-sidebar);
+  color: var(--color-admin-sidebar-fg);
   padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
@@ -47,8 +47,8 @@
 }
 .admin__nav-btn:hover { background: rgba(255,255,255,0.07); color: #fff; }
 .admin__nav-btn.active { background: rgba(59,130,246,0.2); color: #93c5fd; }
-.admin__logout { margin-top: auto; color: #f87171; }
-.admin__logout:hover { background: rgba(239,68,68,0.1); color: #f87171; }
+.admin__logout { margin-top: auto; color: var(--color-danger); }
+.admin__logout:hover { background: rgba(239,68,68,0.1); color: var(--color-danger); }
 
 .admin__main {
   flex: 1;
@@ -123,7 +123,7 @@
   position: relative;
   transition: border-color var(--transition), background var(--transition);
 }
-.admin__file-drop:hover { border-color: var(--color-primary-light); background: #eff6ff; }
+.admin__file-drop:hover { border-color: var(--color-primary-light); background: var(--color-surface-2); }
 .admin__file-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 
 .admin__success-banner {
@@ -168,7 +168,7 @@
   vertical-align: middle;
 }
 
-.admin__table tr:hover td { background: #f8fafc; }
+.admin__table tr:hover td { background: var(--color-surface-2); }
 
 .admin__table-resource { display: flex; align-items: center; gap: 0.65rem; max-width: 280px; }
 .admin__table-thumb { width: 44px; height: 32px; object-fit: cover; border-radius: var(--radius-sm); flex-shrink: 0; }
@@ -248,6 +248,37 @@
 [data-theme="dark"] .admin__file-drop:hover {
   background: rgba(59, 130, 246, 0.06);
 }
+
+/* Status badges */
+[data-theme="dark"] .admin__status-badge--published { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+[data-theme="dark"] .admin__status-badge--draft     { background: rgba(100, 116, 139, 0.12); }
+
+/* Status tags (resource/user active|inactive) */
+[data-theme="dark"] .status-tag--active   { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+[data-theme="dark"] .status-tag--inactive { background: var(--color-surface-2); }
+
+/* Role tags */
+[data-theme="dark"] .role-tag--admin   { background: rgba(251, 191, 36, 0.15);  color: #fbbf24; }
+[data-theme="dark"] .role-tag--faculty { background: rgba(167, 139, 250, 0.15); color: #a78bfa; }
+[data-theme="dark"] .role-tag--student { background: rgba(52, 211, 153, 0.15);  color: #34d399; }
+
+/* Toasts */
+[data-theme="dark"] .admin-toast--success { background: rgba(52, 211, 153, 0.15); color: #34d399; border-color: rgba(52, 211, 153, 0.3); }
+[data-theme="dark"] .admin-toast--error   { background: rgba(248, 113, 113, 0.15); color: #f87171; border-color: rgba(248, 113, 113, 0.3); }
+
+/* Enterprise action buttons */
+[data-theme="dark"] .admin__action-btn--danger:hover        { background: rgba(248, 113, 113, 0.15); border-color: rgba(248, 113, 113, 0.4); color: #f87171; }
+[data-theme="dark"] .admin__action-btn--toggle:hover        { background: rgba(96, 165, 250, 0.1); }
+[data-theme="dark"] .admin__action-btn--toggle-active:hover { background: rgba(52, 211, 153, 0.1); border-color: rgba(52, 211, 153, 0.35); }
+[data-theme="dark"] .admin__action-btn--success:hover       { background: rgba(52, 211, 153, 0.1); border-color: rgba(52, 211, 153, 0.35); }
+
+/* Icon buttons */
+[data-theme="dark"] .admin__icon-btn--danger:hover  { background: rgba(248, 113, 113, 0.15); border-color: rgba(248, 113, 113, 0.4); }
+[data-theme="dark"] .admin__icon-btn--toggle:hover  { background: rgba(96, 165, 250, 0.1); }
+[data-theme="dark"] .admin__icon-btn--success:hover { background: rgba(52, 211, 153, 0.1); border-color: rgba(52, 211, 153, 0.35); }
+
+/* File drop light hover (non-dark already handled above) */
+[data-theme="light"] .admin__file-drop:hover { background: #eff6ff; }
 
 /* ── Responsive ── */
 @media (max-width: 768px) {

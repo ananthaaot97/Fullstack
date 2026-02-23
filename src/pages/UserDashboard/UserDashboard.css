@@ -15,6 +15,14 @@
   gap: 1.5rem;
 }
 
+.dashboard__brand {
+  display: flex;
+  align-items: center;
+  padding: 0 0.25rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
 .dashboard__profile {
   display: flex;
   align-items: center;
