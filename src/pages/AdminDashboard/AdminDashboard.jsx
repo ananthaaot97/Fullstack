@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from '../../context/ThemeContext';
 import { RESOURCES, MOCK_USERS, ANALYTICS } from '../../data/mockData';
 import ResourcePreviewModal from '../../components/admin/ResourcePreviewModal';
 import EditResourceModal from '../../components/admin/EditResourceModal';
@@ -10,7 +9,7 @@ import RecentActivity from '../../components/admin/RecentActivity';
 import AdminPageHeader from '../../components/admin/AdminPageHeader';
 import {
   LayoutDashboard, BookOpen, Upload, Users, BarChart2, Settings, LogOut,
-  ShieldCheck, Menu, Sun, Moon, Eye, Pencil, Globe, EyeOff, Trash2,
+  ShieldCheck, Menu, Eye, Pencil, Globe, EyeOff, Trash2,
   ArrowDownToLine, Layers, Star, AlertCircle, Calendar, ChevronDown, X,
   CheckCircle,
 } from 'lucide-react';
@@ -102,7 +101,6 @@ const INITIAL_ACTIVITIES = [
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
-  const { theme, toggle: toggleTheme } = useTheme();
   const navigate = useNavigate();
   const toastCounter = useRef(0);
   const activityCounter = useRef(5); // starts after INITIAL_ACTIVITIES
@@ -253,8 +251,6 @@ export default function AdminDashboard() {
     showToast('Resource uploaded successfully!');
   };
 
-  const activeSectionLabel = SECTIONS.find(s => s.id === activeSection)?.label || '';
-
   /* ── Category breakdown data ── */
   const catBreakdown = [
     { label: 'Textbooks', count: 4, pct: 33 },
@@ -333,30 +329,17 @@ export default function AdminDashboard() {
 
       {/* Main content */}
       <div className="admin__main">
-        {/* Header */}
-        <header className="admin__header">
-          <div className="admin__header-left">
-            <button
-              className="admin__hamburger"
-              onClick={() => setSidebarOpen(o => !o)}
-              aria-label="Toggle sidebar"
-              aria-expanded={sidebarOpen}
-            >
-              <Menu size={20} strokeWidth={2} />
-            </button>
-            <h1 className="admin__header-title">{activeSectionLabel}</h1>
-          </div>
-          <div className="admin__header-right">
-            <button
-              className="admin__theme-toggle"
-              onClick={toggleTheme}
-              aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-              title={theme === 'light' ? 'Dark mode' : 'Light mode'}
-            >
-              {theme === 'light' ? <Moon size={16} strokeWidth={2} /> : <Sun size={16} strokeWidth={2} />}
-            </button>
-          </div>
-        </header>
+        {/* Mobile-only bar — hamburger to open sidebar */}
+        <div className="admin__mobile-bar" aria-hidden={!sidebarOpen}>
+          <button
+            className="admin__hamburger"
+            onClick={() => setSidebarOpen(o => !o)}
+            aria-label="Toggle sidebar"
+            aria-expanded={sidebarOpen}
+          >
+            <Menu size={20} strokeWidth={2} />
+          </button>
+        </div>
 
         {/* ── OVERVIEW ── */}
         {activeSection === 'overview' && (
