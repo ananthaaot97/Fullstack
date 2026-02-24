@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { Lock, Search, Download, User, LogOut } from 'lucide-react';
@@ -78,56 +79,73 @@ export default function UserDashboard() {
 
       {/* Main content */}
       <div className="dashboard__main">
-        {activeTab === 'browse' && (
-          <section>
-            <h2 className="dashboard__section-title">Browse Resources</h2>
-            <div className="dashboard__toolbar">
-              <SearchBar value={search} onChange={setSearch} />
-              <CategoryFilter active={category} onSelect={setCategory} />
-            </div>
-            <div className="resource-grid" style={{ marginTop: '1.5rem' }}>
-              {filtered.map(r => (
-                <ResourceCard key={r.id} resource={r} onPreview={setPreviewResource} onFeedback={setFeedbackResource} />
-              ))}
-            </div>
-          </section>
-        )}
+        <AnimatePresence mode="wait" initial={false}>
+          {activeTab === 'browse' && (
+            <Motion.section
+              key="browse"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } }}
+              exit={{ opacity: 0, y: -6, transition: { duration: 0.18 } }}
+            >
+              <h2 className="dashboard__section-title">Browse Resources</h2>
+              <div className="dashboard__toolbar">
+                <SearchBar value={search} onChange={setSearch} />
+                <CategoryFilter active={category} onSelect={setCategory} />
+              </div>
+              <div className="resource-grid" style={{ marginTop: '1.5rem' }}>
+                {filtered.map(r => (
+                  <ResourceCard key={r.id} resource={r} onPreview={setPreviewResource} onFeedback={setFeedbackResource} />
+                ))}
+              </div>
+            </Motion.section>
+          )}
 
-        {activeTab === 'history' && (
-          <section>
-            <h2 className="dashboard__section-title">Download History</h2>
-            <div className="dashboard__history-list">
-              {MOCK_HISTORY.map(r => (
-                <div key={r.id} className="dashboard__history-item">
-                  <img src={r.thumbnail} alt={r.title} className="dashboard__history-thumb" />
-                  <div className="dashboard__history-info">
-                    <p className="dashboard__history-title">{r.title}</p>
-                    <p className="dashboard__history-meta">{r.categoryLabel} • {r.year} • {r.fileSize}</p>
+          {activeTab === 'history' && (
+            <Motion.section
+              key="history"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } }}
+              exit={{ opacity: 0, y: -6, transition: { duration: 0.18 } }}
+            >
+              <h2 className="dashboard__section-title">Download History</h2>
+              <div className="dashboard__history-list">
+                {MOCK_HISTORY.map(r => (
+                  <div key={r.id} className="dashboard__history-item">
+                    <img src={r.thumbnail} alt={r.title} className="dashboard__history-thumb" />
+                    <div className="dashboard__history-info">
+                      <p className="dashboard__history-title">{r.title}</p>
+                      <p className="dashboard__history-meta">{r.categoryLabel} • {r.year} • {r.fileSize}</p>
+                    </div>
+                    <button className="btn btn--primary btn--sm" onClick={() => alert('Re-download started (mock)')}><Download size={14} aria-hidden="true" /> Again</button>
                   </div>
-                  <button className="btn btn--primary btn--sm" onClick={() => alert('Re-download started (mock)')}><Download size={14} aria-hidden="true" /> Again</button>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+                ))}
+              </div>
+            </Motion.section>
+          )}
 
-        {activeTab === 'profile' && (
-          <section>
-            <h2 className="dashboard__section-title">My Profile</h2>
-            <div className="dashboard__profile-card">
-              <div className="dashboard__profile-avatar">{user.name.charAt(0).toUpperCase()}</div>
-              <div className="form-group" style={{ width: '100%', maxWidth: 400 }}>
-                <label className="form-label">Full Name</label>
-                <input className="form-input" defaultValue={user.name} />
+          {activeTab === 'profile' && (
+            <Motion.section
+              key="profile"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } }}
+              exit={{ opacity: 0, y: -6, transition: { duration: 0.18 } }}
+            >
+              <h2 className="dashboard__section-title">My Profile</h2>
+              <div className="dashboard__profile-card">
+                <div className="dashboard__profile-avatar">{user.name.charAt(0).toUpperCase()}</div>
+                <div className="form-group" style={{ width: '100%', maxWidth: 400 }}>
+                  <label className="form-label">Full Name</label>
+                  <input className="form-input" defaultValue={user.name} />
+                </div>
+                <div className="form-group" style={{ width: '100%', maxWidth: 400 }}>
+                  <label className="form-label">Email</label>
+                  <input className="form-input" type="email" defaultValue={user.email} />
+                </div>
+                <button className="btn btn--primary" onClick={() => alert('Profile updated! (mock)')}>Save Changes</button>
               </div>
-              <div className="form-group" style={{ width: '100%', maxWidth: 400 }}>
-                <label className="form-label">Email</label>
-                <input className="form-input" type="email" defaultValue={user.email} />
-              </div>
-              <button className="btn btn--primary" onClick={() => alert('Profile updated! (mock)')}>Save Changes</button>
-            </div>
-          </section>
-        )}
+            </Motion.section>
+          )}
+        </AnimatePresence>
       </div>
 
       {previewResource && <PreviewModal resource={previewResource} onClose={() => setPreviewResource(null)} />}

@@ -33,10 +33,19 @@
 .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.6rem center; background-size: 1.2em; padding-right: 2rem; }
 
 /* Star rating */
-.star-rating { display: flex; align-items: center; gap: 0.25rem; }
-.star-btn { background: transparent; border: none; font-size: 1.8rem; color: var(--color-border); cursor: pointer; transition: color var(--transition), transform var(--transition); line-height: 1; }
+.star-rating { display: flex; align-items: center; gap: 0.15rem; }
+.star-btn {
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; border: none;
+  color: var(--color-border);
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition), transform var(--transition);
+  line-height: 1;
+}
 .star-btn.filled { color: var(--color-accent); }
-.star-btn:hover { transform: scale(1.2); }
+.star-btn:hover  { color: var(--color-accent); transform: scale(1.18); }
 .star-label { font-size: 0.85rem; color: var(--color-text-muted); margin-left: 0.5rem; }
 
 .feedback-modal__footer {

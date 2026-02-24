@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, CheckCircle, MessageSquare } from 'lucide-react';
+import { X, CheckCircle, Star } from 'lucide-react';
 import './FeedbackForm.css';
 
 function getFocusable(container) {
@@ -58,14 +58,14 @@ export default function FeedbackForm({ resource, onClose }) {
         {submitted ? (
           <div className="feedback-modal__success">
             <div className="feedback-modal__success-icon"><CheckCircle size={44} strokeWidth={1.5} aria-hidden="true" /></div>
-            <h2>Thank you for your feedback!</h2>
+            <h2>Thank you for your rating!</h2>
             <p>Your review for <strong>"{resource.title}"</strong> has been submitted.</p>
             <button className="btn btn--primary" onClick={onClose}>Close</button>
           </div>
         ) : (
           <>
             <div className="feedback-modal__header">
-              <h2 id="feedback-title"><MessageSquare size={18} aria-hidden="true" style={{ verticalAlign: 'middle', marginRight: '0.4rem' }} />Leave Feedback</h2>
+              <h2 id="feedback-title"><Star size={18} aria-hidden="true" style={{ verticalAlign: 'middle', marginRight: '0.4rem' }} />Rate Resource</h2>
               <p>Reviewing: <strong>{resource.title}</strong></p>
             </div>
 
@@ -80,9 +80,14 @@ export default function FeedbackForm({ resource, onClose }) {
                       type="button"
                       className={`star-btn${n <= form.rating ? ' filled' : ''}`}
                       onClick={() => setForm(f => ({ ...f, rating: n }))}
-                      aria-label={`Rate ${n} stars`}
+                      aria-label={`Rate ${n} out of 5 stars`}
                     >
-                      ★
+                      <Star
+                        size={22}
+                        strokeWidth={1.5}
+                        fill={n <= form.rating ? 'currentColor' : 'none'}
+                        aria-hidden="true"
+                      />
                     </button>
                   ))}
                   <span className="star-label">{form.rating} / 5</span>
@@ -119,7 +124,7 @@ export default function FeedbackForm({ resource, onClose }) {
 
               <div className="feedback-modal__footer">
                 <button type="button" className="btn btn--secondary" onClick={onClose}>Cancel</button>
-                <button type="submit" className="btn btn--primary">Submit Feedback</button>
+                <button type="submit" className="btn btn--primary">Submit Rating</button>
               </div>
             </form>
           </>

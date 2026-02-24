@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileText, Calendar, Download, Eye, MessageSquare, Loader2 } from 'lucide-react';
+import { FileText, Calendar, Download, Eye, Star, Loader2 } from 'lucide-react';
 import './ResourceCard.css';
 
 const CATEGORY_COLORS = {
@@ -75,8 +75,9 @@ export default function ResourceCard({ resource, onPreview, onFeedback }) {
         <button
           className="btn btn--ghost btn--sm"
           onClick={() => onFeedback(resource)}
+          aria-label={`Rate ${resource.title}`}
         >
-          <MessageSquare size={14} aria-hidden="true" /> Feedback
+          <Star size={14} aria-hidden="true" /> Rate
         </button>
       </div>
     </article>

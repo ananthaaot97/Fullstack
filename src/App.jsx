@@ -1,7 +1,8 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence, MotionConfig } from 'framer-motion';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
-import PageFade from './components/motion/PageFade';
+import PageTransition from './components/motion/PageTransition';
 import LandingPage from './pages/LandingPage/LandingPage';
 import Home from './pages/Home/Home';
 import Categories from './pages/Categories/Categories';
@@ -13,29 +14,41 @@ import UserDashboard from './pages/UserDashboard/UserDashboard';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 
 export default function App() {
+  const location = useLocation();
+
   return (
-    <>
+    /*
+      MotionConfig reducedMotion="user" — Framer Motion will automatically
+      disable animations for users who prefer reduced motion at OS level.
+    */
+    <MotionConfig reducedMotion="user">
       <Navbar />
-      <Routes>
-        <Route path="/"           element={<PageFade><LandingPage /></PageFade>} />
-        <Route path="/home"       element={<PageFade><Home /></PageFade>} />
-        <Route path="/categories" element={<PageFade><Categories /></PageFade>} />
-        <Route path="/popular"    element={<PageFade><Popular /></PageFade>} />
-        <Route path="/latest"     element={<PageFade><Latest /></PageFade>} />
-        <Route path="/login"      element={<PageFade><Login /></PageFade>} />
-        <Route path="/signup"     element={<PageFade><Signup /></PageFade>} />
-        <Route path="/dashboard"  element={<PageFade><UserDashboard /></PageFade>} />
-        <Route path="/admin"      element={<PageFade><AdminDashboard /></PageFade>} />
-        <Route path="*"           element={
-          <PageFade>
-            <main style={{ textAlign: 'center', padding: '6rem 1rem' }}>
-              <h2 style={{ fontSize: '3rem' }}>404</h2>
-              <p style={{ color: 'var(--color-text-muted)', marginTop: '0.5rem' }}>Page not found.</p>
-            </main>
-          </PageFade>
-        } />
-      </Routes>
+      {/*
+        AnimatePresence mode="wait" — old page exits before new page enters.
+        Routes keyed on pathname so React swaps components on navigation.
+      */}
+      <AnimatePresence mode="wait" initial={false}>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/"           element={<PageTransition><LandingPage /></PageTransition>} />
+          <Route path="/home"       element={<PageTransition><Home /></PageTransition>} />
+          <Route path="/categories" element={<PageTransition><Categories /></PageTransition>} />
+          <Route path="/popular"    element={<PageTransition><Popular /></PageTransition>} />
+          <Route path="/latest"     element={<PageTransition><Latest /></PageTransition>} />
+          <Route path="/login"      element={<PageTransition><Login /></PageTransition>} />
+          <Route path="/signup"     element={<PageTransition><Signup /></PageTransition>} />
+          <Route path="/dashboard"  element={<PageTransition><UserDashboard /></PageTransition>} />
+          <Route path="/admin"      element={<PageTransition><AdminDashboard /></PageTransition>} />
+          <Route path="*"           element={
+            <PageTransition>
+              <main style={{ textAlign: 'center', padding: '6rem 1rem' }}>
+                <h2 style={{ fontSize: '3rem' }}>404</h2>
+                <p style={{ color: 'var(--color-text-muted)', marginTop: '0.5rem' }}>Page not found.</p>
+              </main>
+            </PageTransition>
+          } />
+        </Routes>
+      </AnimatePresence>
       <Footer />
-    </>
+    </MotionConfig>
   );
 }
