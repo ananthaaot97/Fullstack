@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
+import PageFade from './components/motion/PageFade';
 import LandingPage from './pages/LandingPage/LandingPage';
 import Home from './pages/Home/Home';
 import Categories from './pages/Categories/Categories';
@@ -16,24 +17,22 @@ export default function App() {
     <>
       <Navbar />
       <Routes>
-        {/* Dedicated professional landing page */}
-        <Route path="/"           element={<LandingPage />} />
-
-        {/* Main browse + search page */}
-        <Route path="/home"       element={<Home />} />
-
-        <Route path="/categories" element={<Categories />} />
-        <Route path="/popular"    element={<Popular />} />
-        <Route path="/latest"     element={<Latest />} />
-        <Route path="/login"      element={<Login />} />
-        <Route path="/signup"     element={<Signup />} />
-        <Route path="/dashboard"  element={<UserDashboard />} />
-        <Route path="/admin"      element={<AdminDashboard />} />
+        <Route path="/"           element={<PageFade><LandingPage /></PageFade>} />
+        <Route path="/home"       element={<PageFade><Home /></PageFade>} />
+        <Route path="/categories" element={<PageFade><Categories /></PageFade>} />
+        <Route path="/popular"    element={<PageFade><Popular /></PageFade>} />
+        <Route path="/latest"     element={<PageFade><Latest /></PageFade>} />
+        <Route path="/login"      element={<PageFade><Login /></PageFade>} />
+        <Route path="/signup"     element={<PageFade><Signup /></PageFade>} />
+        <Route path="/dashboard"  element={<PageFade><UserDashboard /></PageFade>} />
+        <Route path="/admin"      element={<PageFade><AdminDashboard /></PageFade>} />
         <Route path="*"           element={
-          <main style={{ textAlign: 'center', padding: '6rem 1rem' }}>
-            <h2 style={{ fontSize: '3rem' }}>404</h2>
-            <p style={{ color: 'var(--color-text-muted)', marginTop: '0.5rem' }}>Page not found.</p>
-          </main>
+          <PageFade>
+            <main style={{ textAlign: 'center', padding: '6rem 1rem' }}>
+              <h2 style={{ fontSize: '3rem' }}>404</h2>
+              <p style={{ color: 'var(--color-text-muted)', marginTop: '0.5rem' }}>Page not found.</p>
+            </main>
+          </PageFade>
         } />
       </Routes>
       <Footer />

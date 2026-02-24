@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Layers } from 'lucide-react';
+import { Layers, BookOpen, Microscope, BookMarked, GraduationCap, Inbox } from 'lucide-react';
 import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import ResourceCard from '../../components/ResourceCard/ResourceCard';
@@ -7,6 +7,14 @@ import PreviewModal from '../../components/PreviewModal/PreviewModal';
 import FeedbackForm from '../../components/FeedbackForm/FeedbackForm';
 import { RESOURCES, CATEGORIES } from '../../data/mockData';
 import './Categories.css';
+
+const CAT_ICONS = {
+  all:       <Layers        size={28} strokeWidth={1.75} aria-hidden="true" />,
+  textbooks: <BookOpen      size={28} strokeWidth={1.75} aria-hidden="true" />,
+  research:  <Microscope    size={28} strokeWidth={1.75} aria-hidden="true" />,
+  guides:    <BookMarked    size={28} strokeWidth={1.75} aria-hidden="true" />,
+  tutorials: <GraduationCap size={28} strokeWidth={1.75} aria-hidden="true" />,
+};
 
 export default function Categories() {
   const [search, setSearch] = useState('');
@@ -47,7 +55,7 @@ export default function Categories() {
                   className={`cat-card${category === cat.id ? ' active' : ''}`}
                   onClick={() => setCategory(cat.id)}
                 >
-                  <span className="cat-card__icon">{cat.icon}</span>
+                  <span className="cat-card__icon">{CAT_ICONS[cat.id]}</span>
                   <span className="cat-card__label">{cat.label}</span>
                   <span className="cat-card__count">{count} items</span>
                 </button>
@@ -62,7 +70,8 @@ export default function Categories() {
         <div className="container">
           <div className="categories__toolbar">
             <h2 className="section-title">
-              {activeCat?.icon} {activeCat?.label || 'All'}
+              <span className="section-title__icon">{CAT_ICONS[category] ?? CAT_ICONS.all}</span>
+              {activeCat?.label || 'All'}
               <span className="section-count">{filtered.length}</span>
             </h2>
             <SearchBar value={search} onChange={setSearch} placeholder="Filter results…" />
@@ -77,7 +86,7 @@ export default function Categories() {
             </div>
           ) : (
             <div className="empty-state">
-              <div className="empty-state__icon">📭</div>
+              <div className="empty-state__icon"><Inbox size={36} strokeWidth={1.5} aria-hidden="true" /></div>
               <h3>No resources in this category yet</h3>
               <button className="btn btn--primary" onClick={() => { setSearch(''); setCategory('all'); }}>View all</button>
             </div>

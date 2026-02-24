@@ -33,4 +33,8 @@
   color: #fff;
 }
 
-.cat-filter__icon { font-size: 1rem; }
+.cat-filter__icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}

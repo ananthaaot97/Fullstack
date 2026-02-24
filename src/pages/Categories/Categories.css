@@ -30,7 +30,19 @@
 .cat-card:hover { border-color: var(--color-primary-light); box-shadow: var(--shadow-md); transform: translateY(-2px); }
 .cat-card.active { border-color: var(--color-primary); background: var(--color-surface-2); }
 [data-theme="light"] .cat-card.active { background: #eff6ff; }
-.cat-card__icon { font-size: 2rem; }
+.cat-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-2);
+  color: var(--color-primary);
+  transition: background var(--transition), color var(--transition);
+}
+.cat-card.active .cat-card__icon,
+.cat-card:hover .cat-card__icon { background: var(--color-primary); color: #fff; }
 .cat-card__label { font-size: 0.95rem; font-weight: 700; color: var(--color-text); }
 .cat-card__count { font-size: 0.8rem; color: var(--color-text-muted); }
 
