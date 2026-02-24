@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { Lock, Search, Download, User, LogOut } from 'lucide-react';
+import { Lock, Search, Download, User, LogOut, BookMarked, Settings2, ChevronDown } from 'lucide-react';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
 import ResourceCard from '../../components/ResourceCard/ResourceCard';
@@ -14,6 +14,37 @@ import './UserDashboard.css';
 
 const MOCK_HISTORY = RESOURCES.slice(0, 4);
 
+// Reading statuses — mirrors common library/reading-list trackers
+const READ_STATUSES = [
+  { id: 'all',       label: 'All' },
+  { id: 'reading',   label: 'Reading' },
+  { id: 'completed', label: 'Completed' },
+  { id: 'onhold',    label: 'On Hold' },
+  { id: 'dropped',   label: 'Dropped' },
+  { id: 'plantoread',label: 'Plan to Read' },
+];
+
+const STATUS_COLORS = {
+  reading:   { bg: 'rgba(59,130,246,0.12)',  color: '#1a56db' },
+  completed: { bg: 'rgba(16,185,129,0.12)',  color: '#059669' },
+  onhold:    { bg: 'rgba(245,158,11,0.12)',  color: '#b45309' },
+  dropped:   { bg: 'rgba(239,68,68,0.12)',   color: '#dc2626' },
+  plantoread:{ bg: 'rgba(139,92,246,0.12)',  color: '#7c3aed' },
+};
+
+// Mock initial reading-list (resource id → status)
+const INITIAL_LIBRARY = {
+  1: 'reading',
+  2: 'completed',
+  3: 'onhold',
+  4: 'reading',
+  5: 'plantoread',
+  6: 'completed',
+  7: 'plantoread',
+  8: 'dropped',
+  9: 'plantoread',
+};
+
 export default function UserDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -22,6 +53,37 @@ export default function UserDashboard() {
   const [category, setCategory] = useState('all');
   const [previewResource, setPreviewResource] = useState(null);
   const [feedbackResource, setFeedbackResource] = useState(null);
+
+  // My Library state
+  const [library, setLibrary] = useState(INITIAL_LIBRARY); // { [resourceId]: status }
+  const [libStatus, setLibStatus] = useState('all');         // active tab in My Library
+  const [openStatusMenu, setOpenStatusMenu] = useState(null); // id of resource whose dropdown is open
+
+  const myLibraryResources = RESOURCES.filter(r => r.id in library);
+  const filteredLibrary = libStatus === 'all'
+    ? myLibraryResources
+    : myLibraryResources.filter(r => library[r.id] === libStatus);
+
+  const statusCounts = READ_STATUSES.reduce((acc, s) => {
+    acc[s.id] = s.id === 'all'
+      ? myLibraryResources.length
+      : myLibraryResources.filter(r => library[r.id] === s.id).length;
+    return acc;
+  }, {});
+
+  const setResourceStatus = (resourceId, status) => {
+    setLibrary(prev => ({ ...prev, [resourceId]: status }));
+    setOpenStatusMenu(null);
+  };
+
+  const removeFromLibrary = (resourceId) => {
+    setLibrary(prev => {
+      const next = { ...prev };
+      delete next[resourceId];
+      return next;
+    });
+    setOpenStatusMenu(null);
+  };
 
   if (!user) {
     return (
@@ -59,9 +121,10 @@ export default function UserDashboard() {
         </div>
         <nav className="dashboard__nav">
           {[
-            { id: 'browse',  label: 'Browse',          icon: <Search size={15} aria-hidden="true" /> },
-            { id: 'history', label: 'History',           icon: <Download size={15} aria-hidden="true" /> },
-            { id: 'profile', label: 'My Profile',        icon: <User size={15} aria-hidden="true" /> },
+            { id: 'browse',    label: 'Browse',      icon: <Search size={15} aria-hidden="true" /> },
+            { id: 'mylibrary', label: 'My Library',  icon: <BookMarked size={15} aria-hidden="true" /> },
+            { id: 'history',   label: 'History',     icon: <Download size={15} aria-hidden="true" /> },
+            { id: 'profile',   label: 'My Profile',  icon: <User size={15} aria-hidden="true" /> },
           ].map(tab => (
             <button
               key={tab.id}
@@ -97,6 +160,110 @@ export default function UserDashboard() {
                   <ResourceCard key={r.id} resource={r} onPreview={setPreviewResource} onFeedback={setFeedbackResource} />
                 ))}
               </div>
+            </Motion.section>
+          )}
+
+          {activeTab === 'mylibrary' && (
+            <Motion.section
+              key="mylibrary"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } }}
+              exit={{ opacity: 0, y: -6, transition: { duration: 0.18 } }}
+            >
+              <div className="lib__header">
+                <div>
+                  <h2 className="dashboard__section-title" style={{ marginBottom: 0 }}>My Library</h2>
+                  <p className="lib__subtitle">{myLibraryResources.length} resource{myLibraryResources.length !== 1 ? 's' : ''} in your reading list</p>
+                </div>
+              </div>
+
+              {/* ── Reading-status horizontal tab bar ── */}
+              <div className="lib__status-bar">
+                <div className="lib__status-tabs">
+                  {READ_STATUSES.map(s => (
+                    <button
+                      key={s.id}
+                      className={`lib__status-tab${libStatus === s.id ? ' active' : ''}`}
+                      onClick={() => setLibStatus(s.id)}
+                    >
+                      {s.label}
+                      {statusCounts[s.id] > 0 && (
+                        <span className="lib__status-count">{statusCounts[s.id]}</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className="lib__manage-btn"
+                  onClick={() => setLibStatus('all')}
+                  aria-label="View all"
+                  title="Show all"
+                >
+                  <Settings2 size={15} strokeWidth={2} />
+                </button>
+              </div>
+
+              {/* ── Resource list ── */}
+              {filteredLibrary.length === 0 ? (
+                <div className="lib__empty">
+                  <BookMarked size={36} strokeWidth={1.3} aria-hidden="true" />
+                  <p>No resources with&nbsp;<strong>{READ_STATUSES.find(s => s.id === libStatus)?.label}</strong>&nbsp;status.</p>
+                </div>
+              ) : (
+                <div className="lib__list">
+                  {filteredLibrary.map(r => {
+                    const status = library[r.id];
+                    const sc = STATUS_COLORS[status] ?? {};
+                    const isOpen = openStatusMenu === r.id;
+                    return (
+                      <div key={r.id} className="lib__item">
+                        <img src={r.thumbnail} alt={r.title} className="lib__thumb" />
+                        <div className="lib__info">
+                          <p className="lib__title">{r.title}</p>
+                          <p className="lib__meta">{r.author} · {r.categoryLabel} · {r.year}</p>
+                          <div className="lib__badges">
+                            <span className="lib__cat-badge">{r.categoryLabel}</span>
+                            <span className="lib__size">{r.fileSize}</span>
+                          </div>
+                        </div>
+                        {/* Status changer dropdown */}
+                        <div className="lib__status-wrap">
+                          <button
+                            className="lib__status-badge"
+                            style={{ background: sc.bg, color: sc.color }}
+                            onClick={() => setOpenStatusMenu(isOpen ? null : r.id)}
+                            aria-expanded={isOpen}
+                            aria-label="Change reading status"
+                          >
+                            {READ_STATUSES.find(s => s.id === status)?.label}
+                            <ChevronDown size={12} strokeWidth={2.5} />
+                          </button>
+                          {isOpen && (
+                            <div className="lib__status-menu">
+                              {READ_STATUSES.filter(s => s.id !== 'all').map(s => (
+                                <button
+                                  key={s.id}
+                                  className={`lib__status-option${status === s.id ? ' selected' : ''}`}
+                                  onClick={() => setResourceStatus(r.id, s.id)}
+                                >
+                                  {s.label}
+                                </button>
+                              ))}
+                              <div className="lib__status-menu-divider" />
+                              <button
+                                className="lib__status-option lib__status-option--remove"
+                                onClick={() => removeFromLibrary(r.id)}
+                              >
+                                Remove from Library
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </Motion.section>
           )}
 
