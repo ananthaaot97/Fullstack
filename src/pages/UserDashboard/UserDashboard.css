@@ -53,6 +53,9 @@
 
 .dashboard__nav-btn {
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   text-align: left;
   background: transparent;
   border: none;
@@ -177,7 +180,7 @@
   gap: 0.75rem;
   box-shadow: var(--shadow-lg);
 }
-.access-denied__icon { font-size: 3rem; }
+.access-denied__icon { display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); margin-bottom: 0.5rem; }
 .access-denied__card h2 { font-size: 1.3rem; font-weight: 700; }
 .access-denied__card p { color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 0.4rem; }
 

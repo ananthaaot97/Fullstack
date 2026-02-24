@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Flame, ArrowRight } from 'lucide-react';
 import ResourceCard from '../ResourceCard/ResourceCard';
 import PreviewModal from '../PreviewModal/PreviewModal';
 import FeedbackForm from '../FeedbackForm/FeedbackForm';
@@ -20,7 +21,7 @@ export default function PopularResources() {
     <section className="popular-resources">
       <div className="popular-resources__header">
         <div>
-          <span className="popular-resources__eyebrow">🔥 Community Favourites</span>
+          <span className="popular-resources__eyebrow"><Flame size={14} aria-hidden="true" style={{ verticalAlign: 'middle', marginRight: '0.25rem' }} />Community Favourites</span>
           <h2 className="popular-resources__title">Popular Resources</h2>
           <p className="popular-resources__sub">
             Ranked by total downloads — the resources your peers trust most.
@@ -30,7 +31,7 @@ export default function PopularResources() {
           className="btn btn--outline btn--sm popular-resources__view-all"
           onClick={() => navigate('/popular')}
         >
-          See full ranking →
+          See full ranking <ArrowRight size={14} aria-hidden="true" />
         </button>
       </div>
 

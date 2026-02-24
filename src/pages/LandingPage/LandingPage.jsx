@@ -1,14 +1,15 @@
 ﻿import { useNavigate } from 'react-router-dom';
+import { Search, FolderOpen, Eye, ArrowDownToLine, Moon, Smartphone, ArrowRight } from 'lucide-react';
 import ScrollReveal from '../../components/motion/ScrollReveal';
 import './LandingPage.css';
 
 const FEATURES = [
-  { icon: '🔍', title: 'Smart Search', desc: 'Find resources instantly by title, author, or topic with full-text search and tag filtering.' },
-  { icon: '📂', title: 'Organised Categories', desc: 'Browse textbooks, research papers, study guides, and tutorials — neatly organised and filterable.' },
-  { icon: '👁', title: 'Preview Before Download', desc: 'Review metadata, ratings, and descriptions in a dedicated modal before committing to a download.' },
-  { icon: '⬇', title: 'Instant Downloads', desc: 'Download any resource immediately — no paywalls, no subscriptions, no barriers whatsoever.' },
-  { icon: '🌙', title: 'Dark Mode Ready', desc: 'Study comfortably day or night with a carefully crafted theme that respects your system preference.' },
-  { icon: '📱', title: 'Mobile Responsive', desc: 'Fully adaptive on all screen sizes — phones, tablets, and desktops — for learning anywhere.' },
+  { icon: <Search size={22} strokeWidth={1.75} aria-hidden="true" />, title: 'Smart Search', desc: 'Find resources instantly by title, author, or topic with full-text search and tag filtering.' },
+  { icon: <FolderOpen size={22} strokeWidth={1.75} aria-hidden="true" />, title: 'Organised Categories', desc: 'Browse textbooks, research papers, study guides, and tutorials — neatly organised and filterable.' },
+  { icon: <Eye size={22} strokeWidth={1.75} aria-hidden="true" />, title: 'Preview Before Download', desc: 'Review metadata, ratings, and descriptions in a dedicated modal before committing to a download.' },
+  { icon: <ArrowDownToLine size={22} strokeWidth={1.75} aria-hidden="true" />, title: 'Instant Downloads', desc: 'Download any resource immediately — no paywalls, no subscriptions, no barriers whatsoever.' },
+  { icon: <Moon size={22} strokeWidth={1.75} aria-hidden="true" />, title: 'Dark Mode Ready', desc: 'Study comfortably day or night with a carefully crafted theme that respects your system preference.' },
+  { icon: <Smartphone size={22} strokeWidth={1.75} aria-hidden="true" />, title: 'Mobile Responsive', desc: 'Fully adaptive on all screen sizes — phones, tablets, and desktops — for learning anywhere.' },
 ];
 
 const TESTIMONIALS = [
@@ -147,13 +148,13 @@ export default function LandingPage() {
                 <h3>Search or Browse</h3>
                 <p>Use the search bar or navigate by category to discover resources relevant to your field.</p>
               </div>
-              <span className="landing__step-arrow" aria-hidden>→</span>
+              <span className="landing__step-arrow" aria-hidden><ArrowRight size={20} strokeWidth={1.75} /></span>
               <div className="landing__step">
                 <div className="landing__step-number">2</div>
                 <h3>Preview &amp; Evaluate</h3>
                 <p>Open the preview modal to review details, ratings, and descriptions before deciding.</p>
               </div>
-              <span className="landing__step-arrow" aria-hidden>→</span>
+              <span className="landing__step-arrow" aria-hidden><ArrowRight size={20} strokeWidth={1.75} /></span>
               <div className="landing__step">
                 <div className="landing__step-number">3</div>
                 <h3>Download Instantly</h3>

@@ -13,7 +13,7 @@ import {
   LayoutDashboard, BookOpen, Upload, Users, BarChart2, Settings, LogOut,
   Menu, Eye, Pencil, Globe, EyeOff, Trash2,
   ArrowDownToLine, Layers, Star, AlertCircle, Calendar, X,
-  CheckCircle,
+  CheckCircle, Inbox, UserX, FolderOpen,
 } from 'lucide-react';
 import './AdminDashboard.css';
 
@@ -404,7 +404,7 @@ export default function AdminDashboard() {
                       <td>{r.title}</td>
                       <td><span className="cat-tag">{r.categoryLabel}</span></td>
                       <td className="admin__td-num">{r.downloads.toLocaleString()}</td>
-                      <td>⭐ {r.rating}</td>
+                      <td><Star size={13} fill="currentColor" strokeWidth={0} aria-hidden="true" style={{ verticalAlign: 'middle', color: '#f59e0b' }} /> {r.rating}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -452,7 +452,7 @@ export default function AdminDashboard() {
                         <tr>
                           <td colSpan={7}>
                             <EmptyState
-                              icon="📭"
+                              icon={<Inbox size={28} strokeWidth={1.5} aria-hidden="true" />}
                               title="No resources found"
                               sub="Try a different search term."
                             />
@@ -615,7 +615,7 @@ export default function AdminDashboard() {
               <div className="form-group">
                 <label className="form-label admin__form-group-label">Upload File</label>
                 <div className="admin__file-drop">
-                  <span className="admin__file-drop-icon">📁</span>
+                  <span><FolderOpen size={36} strokeWidth={1.5} className="admin__file-drop-icon" aria-hidden="true" /></span>
                   <span>Drag &amp; drop <strong>PDF</strong> or <strong>EPUB</strong> here</span>
                   <span className="admin__file-hint">or <label className="admin__file-browse">browse files<input type="file" className="admin__file-input" accept=".pdf,.epub" /></label></span>
                   <span className="admin__file-hint">Max file size: 25 MB</span>
@@ -675,7 +675,7 @@ export default function AdminDashboard() {
                       ? (
                         <tr>
                           <td colSpan={7}>
-                            <EmptyState icon="👤" title="No users found" sub="Try a different search." />
+                            <EmptyState icon={<UserX size={28} strokeWidth={1.5} aria-hidden="true" />} title="No users found" sub="Try a different search." />
                           </td>
                         </tr>
                       )

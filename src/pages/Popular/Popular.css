@@ -27,7 +27,7 @@
 .popular__podium-item--2 { border-top: 3px solid #94a3b8; }
 .popular__podium-item--3 { border-top: 3px solid #b45309; }
 
-.popular__rank { font-size: 2rem; }
+.popular__rank { display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem; }
 
 .popular__podium-img {
   width: 100%;

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { Layers } from 'lucide-react';
 import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import ResourceCard from '../../components/ResourceCard/ResourceCard';
@@ -29,7 +30,7 @@ export default function Categories() {
       {/* Page hero */}
       <section className="page-hero">
         <div className="container">
-          <h1 className="page-hero__title">📂 Browse Categories</h1>
+          <h1 className="page-hero__title"><Layers size={26} aria-hidden="true" style={{ verticalAlign: 'middle', marginRight: '0.4rem' }} />Browse Categories</h1>
           <p className="page-hero__sub">Filter and discover resources by subject area.</p>
         </div>
       </section>

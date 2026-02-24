@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { X, Download } from 'lucide-react';
 import './PreviewModal.css';
 
 /** Returns all keyboard-focusable elements inside a container */
@@ -55,7 +56,7 @@ export default function PreviewModal({ resource, onClose }) {
         tabIndex={-1}
         aria-label="Resource preview"
       >
-        <button className="modal__close" onClick={onClose} aria-label="Close modal">✕</button>
+        <button className="modal__close" onClick={onClose} aria-label="Close modal"><X size={18} strokeWidth={2} aria-hidden="true" /></button>
 
         <div className="modal__header">
           <img
@@ -105,9 +106,9 @@ export default function PreviewModal({ resource, onClose }) {
         <div className="modal__footer">
           <button
             className="btn btn--primary btn--lg"
-            onClick={() => alert(`✅ Download started for "${resource.title}" (mock action)`)}
+            onClick={() => alert(`Download started for "${resource.title}" (mock action)`)}
           >
-            ⬇ Download Now
+            <Download size={16} aria-hidden="true" /> Download Now
           </button>
           <button className="btn btn--secondary btn--lg" onClick={onClose}>
             Close

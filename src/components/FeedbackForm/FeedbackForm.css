@@ -54,6 +54,6 @@
   align-items: center;
   gap: 1rem;
 }
-.feedback-modal__success-icon { font-size: 3.5rem; }
+.feedback-modal__success-icon { display: flex; justify-content: center; align-items: center; color: var(--color-success); margin-bottom: 0.75rem; }
 .feedback-modal__success h2 { font-size: 1.35rem; font-weight: 700; }
 .feedback-modal__success p { color: var(--color-text-muted); font-size: 0.92rem; max-width: 280px; }

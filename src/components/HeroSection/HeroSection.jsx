@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { BookMarked, Library, TrendingUp } from 'lucide-react';
 import './HeroSection.css';
 
 export default function HeroSection() {
@@ -10,7 +11,7 @@ export default function HeroSection() {
       <div className="hero__bg-shape hero__bg-shape--2" aria-hidden />
 
       <div className="container hero__content">
-        <div className="hero__badge">📖 Open Educational Resources</div>
+        <div className="hero__badge"><BookMarked size={14} aria-hidden="true" style={{ verticalAlign: 'middle', marginRight: '0.3rem' }} />Open Educational Resources</div>
 
         <h1 className="hero__title">
           Knowledge is <span className="hero__title-accent">Free</span> for Everyone
@@ -26,13 +27,13 @@ export default function HeroSection() {
             className="btn btn--primary btn--lg"
             onClick={() => navigate('/categories')}
           >
-            📚 Browse Library
+            <Library size={17} aria-hidden="true" /> Browse Library
           </button>
           <button
             className="btn btn--outline btn--lg"
             onClick={() => navigate('/popular')}
           >
-            🔥 Popular Resources
+            <TrendingUp size={17} aria-hidden="true" /> Popular Resources
           </button>
         </div>
 

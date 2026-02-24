@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { X, CheckCircle, MessageSquare } from 'lucide-react';
 import './FeedbackForm.css';
 
 function getFocusable(container) {
@@ -52,11 +53,11 @@ export default function FeedbackForm({ resource, onClose }) {
         ref={modalRef}
         tabIndex={-1}
       >
-        <button className="modal__close" onClick={onClose} aria-label="Close">✕</button>
+        <button className="modal__close" onClick={onClose} aria-label="Close"><X size={18} strokeWidth={2} aria-hidden="true" /></button>
 
         {submitted ? (
           <div className="feedback-modal__success">
-            <div className="feedback-modal__success-icon">✅</div>
+            <div className="feedback-modal__success-icon"><CheckCircle size={44} strokeWidth={1.5} aria-hidden="true" /></div>
             <h2>Thank you for your feedback!</h2>
             <p>Your review for <strong>"{resource.title}"</strong> has been submitted.</p>
             <button className="btn btn--primary" onClick={onClose}>Close</button>
@@ -64,7 +65,7 @@ export default function FeedbackForm({ resource, onClose }) {
         ) : (
           <>
             <div className="feedback-modal__header">
-              <h2 id="feedback-title">💬 Leave Feedback</h2>
+              <h2 id="feedback-title"><MessageSquare size={18} aria-hidden="true" style={{ verticalAlign: 'middle', marginRight: '0.4rem' }} />Leave Feedback</h2>
               <p>Reviewing: <strong>{resource.title}</strong></p>
             </div>
 

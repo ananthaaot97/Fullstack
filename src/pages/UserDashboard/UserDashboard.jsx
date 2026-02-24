@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { Lock, Search, Download, User, LogOut } from 'lucide-react';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
 import ResourceCard from '../../components/ResourceCard/ResourceCard';
@@ -25,7 +26,7 @@ export default function UserDashboard() {
     return (
       <main className="access-denied">
         <div className="access-denied__card">
-          <div className="access-denied__icon">🔒</div>
+          <div className="access-denied__icon"><Lock size={44} strokeWidth={1.5} aria-hidden="true" /></div>
           <h2>Please log in</h2>
           <p>You must be logged in to view your dashboard.</p>
           <button className="btn btn--primary" onClick={() => navigate('/login')}>Go to Login</button>
@@ -57,20 +58,20 @@ export default function UserDashboard() {
         </div>
         <nav className="dashboard__nav">
           {[
-            { id: 'browse',  label: '🔍 Browse',         },
-            { id: 'history', label: '📥 Download History' },
-            { id: 'profile', label: '👤 My Profile'      },
+            { id: 'browse',  label: 'Browse',          icon: <Search size={15} aria-hidden="true" /> },
+            { id: 'history', label: 'History',           icon: <Download size={15} aria-hidden="true" /> },
+            { id: 'profile', label: 'My Profile',        icon: <User size={15} aria-hidden="true" /> },
           ].map(tab => (
             <button
               key={tab.id}
               className={`dashboard__nav-btn${activeTab === tab.id ? ' active' : ''}`}
               onClick={() => setActiveTab(tab.id)}
             >
-              {tab.label}
+              {tab.icon} {tab.label}
             </button>
           ))}
           <button className="dashboard__nav-btn dashboard__logout" onClick={() => { logout(); navigate('/'); }}>
-            🚪 Logout
+            <LogOut size={15} aria-hidden="true" /> Logout
           </button>
         </nav>
       </aside>
@@ -103,7 +104,7 @@ export default function UserDashboard() {
                     <p className="dashboard__history-title">{r.title}</p>
                     <p className="dashboard__history-meta">{r.categoryLabel} • {r.year} • {r.fileSize}</p>
                   </div>
-                  <button className="btn btn--primary btn--sm" onClick={() => alert('Re-download started (mock)')}>⬇ Again</button>
+                  <button className="btn btn--primary btn--sm" onClick={() => alert('Re-download started (mock)')}><Download size={14} aria-hidden="true" /> Again</button>
                 </div>
               ))}
             </div>

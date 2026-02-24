@@ -19,34 +19,27 @@ const SIZES = {
   lg: { icon: 36, font: '1.5rem',  gap: '0.65rem' },
 };
 
-/* Minimal open-book mark — clean at 18–36 px */
+/* Open-book mark — stroke-only, matches Lucide strokeWidth=1.75 aesthetic */
 function BookMark({ size, color }) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 28 28"
+      viewBox="0 0 24 24"
       fill="none"
+      stroke={color}
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden="true"
       focusable="false"
     >
       {/* Spine */}
-      <rect x="13" y="3" width="2" height="22" rx="1" fill={color} opacity="0.35" />
-      {/* Left page */}
-      <path
-        d="M13 5 C10 5 5 6.5 4 9 L4 23 C5 20.5 10 19 13 19 Z"
-        fill={color}
-        opacity="0.9"
-      />
-      {/* Right page */}
-      <path
-        d="M15 5 C18 5 23 6.5 24 9 L24 23 C23 20.5 18 19 15 19 Z"
-        fill={color}
-        opacity="0.65"
-      />
-      {/* Top highlight line on left page */}
-      <line x1="6.5" y1="11" x2="11.5" y2="10.2" stroke={color} strokeWidth="1.2" strokeLinecap="round" opacity="0.4" />
-      <line x1="6.5" y1="14" x2="11.5" y2="13.2" stroke={color} strokeWidth="1.2" strokeLinecap="round" opacity="0.3" />
+      <line x1="12" y1="3" x2="12" y2="21" />
+      {/* Left page arc */}
+      <path d="M12 3C10 3 5 4 4 7v11c1-3 6-4 8-4" />
+      {/* Right page arc */}
+      <path d="M12 3c2 0 7 1 8 4v11c-1-3-6-4-8-4" />
     </svg>
   );
 }

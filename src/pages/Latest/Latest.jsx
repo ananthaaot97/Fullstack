@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Sparkles, Plus } from 'lucide-react';
 import ResourceCard from '../../components/ResourceCard/ResourceCard';
 import PreviewModal from '../../components/PreviewModal/PreviewModal';
 import FeedbackForm from '../../components/FeedbackForm/FeedbackForm';
@@ -16,7 +17,7 @@ export default function Latest() {
     <main>
       <section className="page-hero page-hero--green">
         <div className="container">
-          <h1 className="page-hero__title">🆕 Latest Additions</h1>
+          <h1 className="page-hero__title"><Sparkles size={26} aria-hidden="true" style={{ verticalAlign: 'middle', marginRight: '0.4rem' }} />Latest Additions</h1>
           <p className="page-hero__sub">Freshly added resources — curated and ready to download.</p>
         </div>
       </section>
@@ -24,7 +25,7 @@ export default function Latest() {
       {/* Newest highlights */}
       <section className="latest__highlights">
         <div className="container">
-          <h2 className="section-title">✨ New This Month<span className="section-count">{latestResources.length}</span></h2>
+          <h2 className="section-title"><Plus size={18} aria-hidden="true" style={{ verticalAlign: 'middle', marginRight: '0.3rem', color: 'var(--color-primary)' }} />New This Month<span className="section-count">{latestResources.length}</span></h2>
           <div className="resource-grid" style={{ marginTop: '1.25rem' }}>
             {latestResources.map(r => (
               <ResourceCard key={r.id} resource={r} onPreview={setPreviewResource} onFeedback={setFeedbackResource} />

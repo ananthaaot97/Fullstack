@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FileText, Calendar, Download, Eye, MessageSquare, Loader2 } from 'lucide-react';
 import './ResourceCard.css';
 
 const CATEGORY_COLORS = {
@@ -15,8 +16,7 @@ export default function ResourceCard({ resource, onPreview, onFeedback }) {
     setDownloading(true);
     setTimeout(() => {
       setDownloading(false);
-      alert(`✅ "${resource.title}" download started!\n(Mock action – no actual file)`);
-    }, 1200);
+      alert(`"${resource.title}" download started!\n(Mock action – no actual file)`);    }, 1200);
   };
 
   const color = CATEGORY_COLORS[resource.category] || '#1a56db';
@@ -50,9 +50,9 @@ export default function ResourceCard({ resource, onPreview, onFeedback }) {
           <span title="Rating" className="resource-card__stars" style={{ color }}>
             {stars}
           </span>
-          <span className="resource-card__meta-item">📄 {resource.pages}pp</span>
-          <span className="resource-card__meta-item">📅 {resource.year}</span>
-          <span className="resource-card__meta-item">⬇ {resource.downloads.toLocaleString()}</span>
+          <span className="resource-card__meta-item"><FileText size={12} aria-hidden="true" /> {resource.pages}pp</span>
+          <span className="resource-card__meta-item"><Calendar size={12} aria-hidden="true" /> {resource.year}</span>
+          <span className="resource-card__meta-item"><Download size={12} aria-hidden="true" /> {resource.downloads.toLocaleString()}</span>
           <span className="resource-card__meta-item">{resource.fileSize}</span>
         </div>
       </div>
@@ -63,20 +63,20 @@ export default function ResourceCard({ resource, onPreview, onFeedback }) {
           className="btn btn--outline btn--sm"
           onClick={() => onPreview(resource)}
         >
-          👁 Preview
+          <Eye size={14} aria-hidden="true" /> Preview
         </button>
         <button
           className="btn btn--primary btn--sm"
           onClick={handleDownload}
           disabled={downloading}
         >
-          {downloading ? '⏳ Downloading…' : '⬇ Download'}
+          {downloading ? <><Loader2 size={14} aria-hidden="true" className="spin" /> Downloading…</> : <><Download size={14} aria-hidden="true" /> Download</>}
         </button>
         <button
           className="btn btn--ghost btn--sm"
           onClick={() => onFeedback(resource)}
         >
-          💬 Feedback
+          <MessageSquare size={14} aria-hidden="true" /> Feedback
         </button>
       </div>
     </article>

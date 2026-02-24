@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { Search } from 'lucide-react';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
 import ResourceCard from '../../components/ResourceCard/ResourceCard';
@@ -101,7 +102,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="empty-state">
-              <div className="empty-state__icon">🔍</div>
+              <div className="empty-state__icon"><Search size={36} strokeWidth={1.5} aria-hidden="true" /></div>
               <h3>No resources found</h3>
               <p>Try a different search term or browse all categories.</p>
               <button className="btn btn--primary" onClick={() => { setSearch(''); setCategory('all'); }}>

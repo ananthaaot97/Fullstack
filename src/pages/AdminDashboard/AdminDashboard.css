@@ -512,7 +512,7 @@
   text-align: center;
   color: var(--color-text-muted);
 }
-.admin__empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.admin__empty-icon { display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); margin-bottom: 0.75rem; }
 .admin__empty h3 { font-size: 1rem; font-weight: 700; color: var(--color-text); margin-bottom: 0.25rem; }
 .admin__empty p  { font-size: 0.875rem; margin-bottom: 1rem; }
 
@@ -575,7 +575,7 @@
 .form-input--error { border-color: #ef4444 !important; }
 
 /* ── File drop zone enhancements ── */
-.admin__file-drop-icon { font-size: 1.75rem; margin-bottom: 0.25rem; }
+.admin__file-drop-icon { display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); margin-bottom: 0.25rem; }
 .admin__file-browse { color: var(--color-primary); text-decoration: underline; cursor: pointer; position: relative; }
 .admin__file-browse input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
 .admin__file-hint { font-size: 0.8rem; color: var(--color-text-muted); }
