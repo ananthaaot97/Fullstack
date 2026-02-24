@@ -15,7 +15,7 @@ import {
   LayoutDashboard, BookOpen, Upload, Users, BarChart2, Settings, LogOut,
   Menu, Eye, Pencil, Globe, EyeOff, Trash2,
   ArrowDownToLine, Layers, Star, AlertCircle, Calendar, X,
-  CheckCircle, Inbox, UserX, FolderOpen,
+  CheckCircle, Inbox, UserX, FolderOpen, MessageSquare, Search,
 } from 'lucide-react';
 import './AdminDashboard.css';
 
@@ -81,12 +81,13 @@ function Toast({ message, type, onDone }) {
 const INITIAL_UPLOAD = { title: '', author: '', category: 'textbooks', description: '', year: new Date().getFullYear(), tags: '', status: 'draft' };
 
 const SECTIONS = [
-  { id: 'overview',   label: 'Overview',         Icon: LayoutDashboard },
-  { id: 'resources',  label: 'Resources',         Icon: BookOpen },
-  { id: 'upload',     label: 'Upload Resource',   Icon: Upload },
-  { id: 'users',      label: 'Users',             Icon: Users },
-  { id: 'analytics',  label: 'Analytics',         Icon: BarChart2 },
-  { id: 'settings',   label: 'Settings',          Icon: Settings },
+  { id: 'overview',   label: 'Overview',            Icon: LayoutDashboard },
+  { id: 'resources',  label: 'Resources',            Icon: BookOpen },
+  { id: 'upload',     label: 'Upload Resource',      Icon: Upload },
+  { id: 'users',      label: 'Users',                Icon: Users },
+  { id: 'reviews',    label: 'Ratings & Reviews',    Icon: MessageSquare },
+  { id: 'analytics',  label: 'Analytics',            Icon: BarChart2 },
+  { id: 'settings',   label: 'Settings',             Icon: Settings },
 ];
 
 const DATE_RANGES = [
@@ -106,7 +107,7 @@ const INITIAL_ACTIVITIES = [
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const { getAvgRating, getUserReviewCount, globalStats } = useRatings();
+  const { getAvgRating, getUserReviewCount, globalStats, getAllUserReviews, deleteReview } = useRatings();
   const toastCounter = useRef(0);
   const activityCounter = useRef(5); // starts after INITIAL_ACTIVITIES
 
@@ -142,6 +143,11 @@ export default function AdminDashboard() {
 
   // Date range filter
   const [dateRange, setDateRange] = useState('last30');
+
+  // Reviews page filters
+  const [rvResourceFilter, setRvResourceFilter] = useState('all');
+  const [rvStarFilter,     setRvStarFilter]     = useState(0);   // 0 = all
+  const [rvSearch,         setRvSearch]          = useState('');
 
   // Settings
   const [settings, setSettings] = useState({
@@ -880,6 +886,161 @@ export default function AdminDashboard() {
             </form>
           </section>
         )}
+        {/* ── RATINGS & REVIEWS ── */}
+        {activeSection === 'reviews' && (() => {
+          const allUserReviews = getAllUserReviews();
+
+          // Build resource lookup: id -> title
+          const resourceMap = Object.fromEntries(RESOURCES.map(r => [r.id, r.title]));
+
+          // Apply filters
+          const filtered = allUserReviews.filter(rv => {
+            const matchResource = rvResourceFilter === 'all' || rv.resourceId === Number(rvResourceFilter);
+            const matchStar     = rvStarFilter === 0 || rv.rating === rvStarFilter;
+            const q = rvSearch.toLowerCase();
+            const matchSearch   = !q ||
+              rv.name.toLowerCase().includes(q) ||
+              rv.text.toLowerCase().includes(q) ||
+              (resourceMap[rv.resourceId] ?? '').toLowerCase().includes(q);
+            return matchResource && matchStar && matchSearch;
+          });
+
+          // Per-star breakdown
+          const starCounts = [5, 4, 3, 2, 1].map(s => ({
+            star: s,
+            count: allUserReviews.filter(r => r.rating === s).length,
+          }));
+
+          const handleDeleteReview = (resourceId, reviewId, reviewerName) => {
+            deleteReview(resourceId, reviewId);
+            showToast(`Review by "${reviewerName}" removed.`, 'error');
+            addActivity(`Review by "${reviewerName}" removed by admin`, 'delete', 'warning');
+          };
+
+          return (
+            <section className="admin__section">
+              <AdminPageHeader
+                title="Ratings & Reviews"
+                subtitle={`${allUserReviews.length} user-submitted review${allUserReviews.length !== 1 ? 's' : ''} across all resources`}
+              />
+
+              {/* ── Summary stat row ── */}
+              <div className="admin__rv-stats">
+                <div className="admin__rv-stat">
+                  <span className="admin__rv-stat-number">{allUserReviews.length}</span>
+                  <span className="admin__rv-stat-label">Total Reviews</span>
+                </div>
+                <div className="admin__rv-stat">
+                  <span className="admin__rv-stat-number">
+                    {globalStats.avgRating ?? '—'}
+                    {globalStats.avgRating && <Star size={16} fill="currentColor" strokeWidth={0} aria-hidden="true" style={{ color: '#f59e0b', marginLeft: 4, verticalAlign: 'middle' }} />}
+                  </span>
+                  <span className="admin__rv-stat-label">Average Rating</span>
+                </div>
+                <div className="admin__rv-stat admin__rv-star-breakdown">
+                  {starCounts.map(({ star, count }) => (
+                    <button
+                      key={star}
+                      className={`admin__rv-star-btn${rvStarFilter === star ? ' active' : ''}`}
+                      onClick={() => setRvStarFilter(rvStarFilter === star ? 0 : star)}
+                      aria-label={`Filter by ${star} stars${rvStarFilter === star ? ' (active)' : ''}`}
+                    >
+                      <Star size={12} fill="currentColor" strokeWidth={0} aria-hidden="true" />
+                      {star} <span className="admin__rv-star-count">{count}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* ── Filter toolbar ── */}
+              <div className="admin__rv-toolbar">
+                <div className="admin__rv-search-wrap">
+                  <Search size={15} className="admin__rv-search-icon" aria-hidden="true" />
+                  <input
+                    className="admin__rv-search form-input"
+                    placeholder="Search reviewer, resource or keyword…"
+                    value={rvSearch}
+                    onChange={e => setRvSearch(e.target.value)}
+                    aria-label="Search reviews"
+                  />
+                </div>
+                <select
+                  className="admin__rv-resource-select form-input"
+                  value={rvResourceFilter}
+                  onChange={e => setRvResourceFilter(e.target.value)}
+                  aria-label="Filter by resource"
+                >
+                  <option value="all">All Resources</option>
+                  {RESOURCES.map(r => (
+                    <option key={r.id} value={r.id}>{r.title}</option>
+                  ))}
+                </select>
+                {(rvSearch || rvResourceFilter !== 'all' || rvStarFilter !== 0) && (
+                  <button
+                    className="btn btn--secondary btn--sm"
+                    onClick={() => { setRvSearch(''); setRvResourceFilter('all'); setRvStarFilter(0); }}
+                  >
+                    <X size={13} aria-hidden="true" /> Clear
+                  </button>
+                )}
+              </div>
+
+              {/* ── Reviews list ── */}
+              {filtered.length === 0 ? (
+                <EmptyState
+                  icon={<MessageSquare size={32} strokeWidth={1.5} aria-hidden="true" />}
+                  title={allUserReviews.length === 0 ? 'No user reviews yet' : 'No reviews match your filters'}
+                  sub={allUserReviews.length === 0
+                    ? 'Reviews submitted by students will appear here.'
+                    : 'Try adjusting the search or filter.'
+                  }
+                />
+              ) : (
+                <div className="admin__rv-list">
+                  {filtered.map(rv => (
+                    <div key={rv.id} className="admin__rv-card">
+                      <div className="admin__rv-card-header">
+                        <div className="admin__rv-avatar" style={{ background: rv.color }}>
+                          {rv.initials}
+                        </div>
+                        <div className="admin__rv-meta">
+                          <span className="admin__rv-name">{rv.name}</span>
+                          <span className="admin__rv-resource">
+                            <BookOpen size={11} aria-hidden="true" />
+                            {resourceMap[rv.resourceId] ?? 'Unknown Resource'}
+                          </span>
+                        </div>
+                        <div className="admin__rv-stars">
+                          {[1,2,3,4,5].map(n => (
+                            <Star
+                              key={n}
+                              size={14}
+                              strokeWidth={1.5}
+                              fill={n <= rv.rating ? 'currentColor' : 'none'}
+                              aria-hidden="true"
+                              style={{ color: n <= rv.rating ? '#f59e0b' : 'var(--color-border)' }}
+                            />
+                          ))}
+                          <span className="admin__rv-score">{rv.rating}/5</span>
+                        </div>
+                        <span className="admin__rv-date">{rv.date}</span>
+                        <button
+                          className="admin__action-btn admin__action-btn--danger"
+                          onClick={() => handleDeleteReview(rv.resourceId, rv.id, rv.name)}
+                          aria-label={`Delete review by ${rv.name}`}
+                        >
+                          <Trash2 size={14} strokeWidth={2} />
+                        </button>
+                      </div>
+                      <p className="admin__rv-text">{rv.text}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          );
+        })()}
+
         </Motion.div>
         </AnimatePresence>
       </div>

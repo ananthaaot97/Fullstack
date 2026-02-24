@@ -658,3 +658,218 @@
 @media (max-width: 480px) {
   .admin__stats-grid { grid-template-columns: 1fr; }
 }
+
+/* ===== Ratings & Reviews panel ===== */
+
+/* ── Summary stat row ── */
+.admin__rv-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.admin__rv-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 1rem;
+  flex-shrink: 0;
+}
+
+.admin__rv-stat-number {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+}
+
+.admin__rv-stat-label {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* ── Star-breakdown pill group ── */
+.admin__rv-star-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.45rem 0.75rem;
+  background: transparent;
+  border: none;
+}
+
+.admin__rv-star-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.28rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+.admin__rv-star-btn svg { color: #f59e0b; flex-shrink: 0; }
+.admin__rv-star-btn:hover,
+.admin__rv-star-btn.active {
+  background: #f59e0b;
+  border-color: #f59e0b;
+  color: #fff;
+}
+.admin__rv-star-btn.active svg { color: #fff; }
+.admin__rv-star-count { opacity: 0.8; margin-left: 1px; }
+
+/* ── Filter toolbar ── */
+.admin__rv-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.admin__rv-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.admin__rv-search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.admin__rv-search {
+  width: 100%;
+  padding-left: 2.2rem !important;
+}
+
+.admin__rv-resource-select {
+  min-width: 180px;
+  flex-shrink: 0;
+}
+
+/* ── Review cards list ── */
+.admin__rv-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.admin__rv-card {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.1rem;
+  transition: box-shadow 180ms ease;
+}
+.admin__rv-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.admin__rv-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.admin__rv-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  letter-spacing: 0.03em;
+}
+
+.admin__rv-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.admin__rv-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin__rv-resource {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.74rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin__rv-stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.admin__rv-score {
+  font-size: 0.74rem;
+  color: var(--color-text-muted);
+  margin-left: 0.3rem;
+  font-weight: 600;
+}
+
+.admin__rv-date {
+  font-size: 0.74rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.admin__rv-text {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  margin: 0;
+  padding-left: calc(36px + 0.75rem);
+}
+
+/* ── Dark mode adjustments ── */
+[data-theme="dark"] .admin__rv-stat        { background: var(--color-surface-2); }
+[data-theme="dark"] .admin__rv-star-btn    { background: var(--color-surface-2); }
+[data-theme="dark"] .admin__rv-card        { background: var(--color-surface-2); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .admin__rv-card-header { gap: 0.5rem; }
+  .admin__rv-text        { padding-left: 0; }
+  .admin__rv-stats       { gap: 0.6rem; }
+  .admin__rv-toolbar     { flex-direction: column; align-items: stretch; }
+  .admin__rv-resource-select { min-width: 0; width: 100%; }
+}

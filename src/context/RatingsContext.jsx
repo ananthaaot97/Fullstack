@@ -105,6 +105,23 @@ export function RatingsProvider({ children }) {
     return (reviewsByResource[resourceId] ?? []).length;
   }, [reviewsByResource]);
 
+  /* All user-submitted reviews across all resources (flat list, newest first) */
+  const getAllUserReviews = useCallback(() => {
+    return Object.entries(reviewsByResource).flatMap(([resourceId, reviews]) =>
+      reviews.map(r => ({ ...r, resourceId: Number(resourceId) }))
+    ).sort((a, b) => b.id - a.id);
+  }, [reviewsByResource]);
+
+  /* Delete a single review (admin moderation) */
+  const deleteReview = useCallback((resourceId, reviewId) => {
+    setReviewsByResource(prev => {
+      const existing = prev[resourceId] ?? [];
+      const updated = { ...prev, [resourceId]: existing.filter(r => r.id !== reviewId) };
+      saveToStorage(updated);
+      return updated;
+    });
+  }, []);
+
   /* Global stats for admin dashboard */
   const globalStats = useMemo(() => {
     const allUserReviews = Object.values(reviewsByResource).flat();
@@ -121,6 +138,8 @@ export function RatingsProvider({ children }) {
       getReviews,
       getAvgRating,
       getUserReviewCount,
+      getAllUserReviews,
+      deleteReview,
       globalStats,
     }}>
       {children}
