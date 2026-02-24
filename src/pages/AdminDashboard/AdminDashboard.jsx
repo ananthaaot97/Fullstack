@@ -148,6 +148,7 @@ export default function AdminDashboard() {
   const [rvResourceFilter, setRvResourceFilter] = useState('all');
   const [rvStarFilter,     setRvStarFilter]     = useState(0);   // 0 = all
   const [rvSearch,         setRvSearch]          = useState('');
+  const [rvSort,           setRvSort]            = useState('newest'); // 'newest' | 'oldest' | 'highest' | 'lowest'
 
   // Settings
   const [settings, setSettings] = useState({
@@ -894,22 +895,41 @@ export default function AdminDashboard() {
           const resourceMap = Object.fromEntries(RESOURCES.map(r => [r.id, r.title]));
 
           // Apply filters
-          const filtered = allUserReviews.filter(rv => {
-            const matchResource = rvResourceFilter === 'all' || rv.resourceId === Number(rvResourceFilter);
-            const matchStar     = rvStarFilter === 0 || rv.rating === rvStarFilter;
-            const q = rvSearch.toLowerCase();
-            const matchSearch   = !q ||
-              rv.name.toLowerCase().includes(q) ||
-              rv.text.toLowerCase().includes(q) ||
-              (resourceMap[rv.resourceId] ?? '').toLowerCase().includes(q);
-            return matchResource && matchStar && matchSearch;
-          });
+          const filtered = allUserReviews
+            .filter(rv => {
+              const matchResource = rvResourceFilter === 'all' || rv.resourceId === Number(rvResourceFilter);
+              const matchStar     = rvStarFilter === 0 || rv.rating === rvStarFilter;
+              const q = rvSearch.toLowerCase();
+              const matchSearch   = !q ||
+                rv.name.toLowerCase().includes(q) ||
+                rv.text.toLowerCase().includes(q) ||
+                (resourceMap[rv.resourceId] ?? '').toLowerCase().includes(q);
+              return matchResource && matchStar && matchSearch;
+            })
+            .sort((a, b) => {
+              if (rvSort === 'oldest')  return a.id - b.id;
+              if (rvSort === 'highest') return b.rating - a.rating || b.id - a.id;
+              if (rvSort === 'lowest')  return a.rating - b.rating || b.id - a.id;
+              return b.id - a.id; // newest
+            });
 
-          // Per-star breakdown
+          // Per-star breakdown for distribution chart
+          const totalCount = allUserReviews.length;
           const starCounts = [5, 4, 3, 2, 1].map(s => ({
             star: s,
             count: allUserReviews.filter(r => r.rating === s).length,
+            pct: totalCount ? Math.round((allUserReviews.filter(r => r.rating === s).length / totalCount) * 100) : 0,
           }));
+
+          // Color for card accent border by rating
+          const ratingColor = (r) => r >= 4 ? '#10b981' : r === 3 ? '#f59e0b' : '#ef4444';
+
+          const SORT_OPTIONS = [
+            { value: 'newest',  label: 'Newest first' },
+            { value: 'oldest',  label: 'Oldest first' },
+            { value: 'highest', label: 'Highest rated' },
+            { value: 'lowest',  label: 'Lowest rated' },
+          ];
 
           const handleDeleteReview = (resourceId, reviewId, reviewerName) => {
             deleteReview(resourceId, reviewId);
@@ -924,32 +944,61 @@ export default function AdminDashboard() {
                 subtitle={`${allUserReviews.length} user-submitted review${allUserReviews.length !== 1 ? 's' : ''} across all resources`}
               />
 
-              {/* ── Summary stat row ── */}
-              <div className="admin__rv-stats">
-                <div className="admin__rv-stat">
-                  <span className="admin__rv-stat-number">{allUserReviews.length}</span>
-                  <span className="admin__rv-stat-label">Total Reviews</span>
+              {/* ── Summary row: totals + distribution ── */}
+              <div className="admin__rv-overview">
+                {/* Stat pills */}
+                <div className="admin__rv-pills">
+                  <div className="admin__rv-pill">
+                    <span className="admin__rv-pill-number">{allUserReviews.length}</span>
+                    <span className="admin__rv-pill-label">Total Reviews</span>
+                  </div>
+                  <div className="admin__rv-pill">
+                    <span className="admin__rv-pill-number">
+                      {globalStats.avgRating
+                        ? <>{globalStats.avgRating}&thinsp;<Star size={14} fill="currentColor" strokeWidth={0} style={{ color: '#f59e0b', verticalAlign: 'middle' }} /></>
+                        : '—'}
+                    </span>
+                    <span className="admin__rv-pill-label">Avg Rating</span>
+                  </div>
+                  <div className="admin__rv-pill">
+                    <span className="admin__rv-pill-number">
+                      {new Set(allUserReviews.map(r => r.resourceId)).size}
+                    </span>
+                    <span className="admin__rv-pill-label">Resources Rated</span>
+                  </div>
+                  <div className="admin__rv-pill">
+                    <span className="admin__rv-pill-number" style={{ color: '#10b981' }}>
+                      {allUserReviews.filter(r => r.rating >= 4).length}
+                    </span>
+                    <span className="admin__rv-pill-label">Positive (4–5★)</span>
+                  </div>
                 </div>
-                <div className="admin__rv-stat">
-                  <span className="admin__rv-stat-number">
-                    {globalStats.avgRating ?? '—'}
-                    {globalStats.avgRating && <Star size={16} fill="currentColor" strokeWidth={0} aria-hidden="true" style={{ color: '#f59e0b', marginLeft: 4, verticalAlign: 'middle' }} />}
-                  </span>
-                  <span className="admin__rv-stat-label">Average Rating</span>
-                </div>
-                <div className="admin__rv-stat admin__rv-star-breakdown">
-                  {starCounts.map(({ star, count }) => (
-                    <button
-                      key={star}
-                      className={`admin__rv-star-btn${rvStarFilter === star ? ' active' : ''}`}
-                      onClick={() => setRvStarFilter(rvStarFilter === star ? 0 : star)}
-                      aria-label={`Filter by ${star} stars${rvStarFilter === star ? ' (active)' : ''}`}
-                    >
-                      <Star size={12} fill="currentColor" strokeWidth={0} aria-hidden="true" />
-                      {star} <span className="admin__rv-star-count">{count}</span>
-                    </button>
-                  ))}
-                </div>
+
+                {/* Rating distribution chart */}
+                {totalCount > 0 && (
+                  <div className="admin__rv-dist">
+                    <div className="admin__rv-dist-title">Rating Distribution</div>
+                    {starCounts.map(({ star, count, pct }) => (
+                      <button
+                        key={star}
+                        className={`admin__rv-dist-row${rvStarFilter === star ? ' active' : ''}`}
+                        onClick={() => setRvStarFilter(rvStarFilter === star ? 0 : star)}
+                        aria-label={`Filter by ${star} stars (${count} reviews)`}
+                      >
+                        <span className="admin__rv-dist-stars">
+                          {[1,2,3,4,5].map(n => (
+                            <Star key={n} size={10} strokeWidth={0} fill={n <= star ? 'currentColor' : 'none'}
+                              style={{ color: n <= star ? '#f59e0b' : 'var(--color-border)' }} />
+                          ))}
+                        </span>
+                        <div className="admin__rv-dist-bar-wrap">
+                          <div className="admin__rv-dist-bar" style={{ width: `${pct}%` }} />
+                        </div>
+                        <span className="admin__rv-dist-count">{count}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* ── Filter toolbar ── */}
@@ -975,6 +1024,14 @@ export default function AdminDashboard() {
                     <option key={r.id} value={r.id}>{r.title}</option>
                   ))}
                 </select>
+                <select
+                  className="admin__rv-sort-select form-input"
+                  value={rvSort}
+                  onChange={e => setRvSort(e.target.value)}
+                  aria-label="Sort reviews"
+                >
+                  {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
                 {(rvSearch || rvResourceFilter !== 'all' || rvStarFilter !== 0) && (
                   <button
                     className="btn btn--secondary btn--sm"
@@ -984,6 +1041,13 @@ export default function AdminDashboard() {
                   </button>
                 )}
               </div>
+
+              {/* Result count */}
+              {allUserReviews.length > 0 && (
+                <p className="admin__rv-result-count">
+                  Showing <strong>{filtered.length}</strong> of <strong>{allUserReviews.length}</strong> reviews
+                </p>
+              )}
 
               {/* ── Reviews list ── */}
               {filtered.length === 0 ? (
@@ -998,7 +1062,11 @@ export default function AdminDashboard() {
               ) : (
                 <div className="admin__rv-list">
                   {filtered.map(rv => (
-                    <div key={rv.id} className="admin__rv-card">
+                    <div
+                      key={rv.id}
+                      className="admin__rv-card"
+                      style={{ borderLeftColor: ratingColor(rv.rating) }}
+                    >
                       <div className="admin__rv-card-header">
                         <div className="admin__rv-avatar" style={{ background: rv.color }}>
                           {rv.initials}
@@ -1021,7 +1089,15 @@ export default function AdminDashboard() {
                               style={{ color: n <= rv.rating ? '#f59e0b' : 'var(--color-border)' }}
                             />
                           ))}
-                          <span className="admin__rv-score">{rv.rating}/5</span>
+                          <span
+                            className="admin__rv-score-badge"
+                            style={{
+                              background: ratingColor(rv.rating) + '20',
+                              color: ratingColor(rv.rating),
+                            }}
+                          >
+                            {rv.rating}.0
+                          </span>
                         </div>
                         <span className="admin__rv-date">{rv.date}</span>
                         <button
@@ -1032,7 +1108,7 @@ export default function AdminDashboard() {
                           <Trash2 size={14} strokeWidth={2} />
                         </button>
                       </div>
-                      <p className="admin__rv-text">{rv.text}</p>
+                      {rv.text && <p className="admin__rv-text">{rv.text}</p>}
                     </div>
                   ))}
                 </div>

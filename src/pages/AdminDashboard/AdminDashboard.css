@@ -13,21 +13,22 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  border-right: 1px solid var(--color-border);
 }
 
 .admin__brand {
   padding: 0.65rem 0.75rem;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--color-surface-2);
   border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
   transition: background 150ms ease, border-color 150ms ease;
   cursor: default;
 }
 .admin__brand:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.14);
+  background: var(--color-border);
+  border-color: var(--color-border);
 }
 
 .admin__nav { display: flex; flex-direction: column; gap: 0.25rem; flex: 1; }
@@ -37,18 +38,31 @@
   text-align: left;
   background: transparent;
   border: none;
-  padding: 0.65rem 0.9rem;
-  border-radius: var(--radius-md);
+  border-left: 3px solid transparent;
+  padding: 0.62rem 0.9rem;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-admin-sidebar-fg);
   cursor: pointer;
-  transition: background var(--transition), color var(--transition);
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
-.admin__nav-btn:hover { background: rgba(255,255,255,0.07); color: #fff; }
-.admin__nav-btn.active { background: rgba(59,130,246,0.2); color: #93c5fd; }
+.admin__nav-btn:hover {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border-left-color: var(--color-border);
+}
+.admin__nav-btn.active {
+  background: rgba(59,130,246,0.1);
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  font-weight: 600;
+}
 .admin__logout { margin-top: auto; color: var(--color-danger); }
-.admin__logout:hover { background: rgba(239,68,68,0.1); color: var(--color-danger); }
+.admin__logout:hover { background: rgba(239,68,68,0.08); color: var(--color-danger); }
 
 .admin__main {
   flex: 1;
@@ -661,72 +675,119 @@
 
 /* ===== Ratings & Reviews panel ===== */
 
-/* ── Summary stat row ── */
-.admin__rv-stats {
+/* ── Overview: pills + distribution side-by-side ── */
+.admin__rv-overview {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.25rem;
   margin-bottom: 1.25rem;
+  flex-wrap: wrap;
 }
 
-.admin__rv-stat {
+/* ── Stat pills ── */
+.admin__rv-pills {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 170px;
+}
+
+.admin__rv-pill {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
+  gap: 0.75rem;
   background: var(--color-surface-2);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 0.65rem 1rem;
-  flex-shrink: 0;
+  padding: 0.6rem 1rem;
 }
 
-.admin__rv-stat-number {
-  font-size: 1.15rem;
-  font-weight: 700;
+.admin__rv-pill-number {
+  font-size: 1.1rem;
+  font-weight: 800;
   color: var(--color-text);
   display: flex;
   align-items: center;
+  gap: 0.2rem;
 }
 
-.admin__rv-stat-label {
-  font-size: 0.78rem;
+.admin__rv-pill-label {
+  font-size: 0.74rem;
   color: var(--color-text-muted);
-  white-space: nowrap;
-}
-
-/* ── Star-breakdown pill group ── */
-.admin__rv-star-breakdown {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  padding: 0.45rem 0.75rem;
-  background: transparent;
-  border: none;
-}
-
-.admin__rv-star-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.28rem 0.6rem;
-  border-radius: 999px;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface-2);
-  color: var(--color-text-muted);
-  font-size: 0.75rem;
   font-weight: 500;
+  text-align: right;
+}
+
+/* ── Rating distribution chart ── */
+.admin__rv-dist {
+  flex: 1;
+  min-width: 200px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.admin__rv-dist-title {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.admin__rv-dist-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   cursor: pointer;
-  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+  border-radius: var(--radius-sm);
+  padding: 0.2rem 0.4rem;
+  border: 1.5px solid transparent;
+  background: transparent;
+  transition: background 130ms ease, border-color 130ms ease;
+  width: 100%;
 }
-.admin__rv-star-btn svg { color: #f59e0b; flex-shrink: 0; }
-.admin__rv-star-btn:hover,
-.admin__rv-star-btn.active {
-  background: #f59e0b;
+.admin__rv-dist-row:hover { background: var(--color-border); }
+.admin__rv-dist-row.active {
   border-color: #f59e0b;
-  color: #fff;
+  background: rgba(245,158,11,0.08);
 }
-.admin__rv-star-btn.active svg { color: #fff; }
-.admin__rv-star-count { opacity: 0.8; margin-left: 1px; }
+
+.admin__rv-dist-stars {
+  display: flex;
+  gap: 1px;
+  flex-shrink: 0;
+}
+
+.admin__rv-dist-bar-wrap {
+  flex: 1;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.admin__rv-dist-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+  min-width: 3px;
+}
+
+.admin__rv-dist-count {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  width: 18px;
+  text-align: right;
+  flex-shrink: 0;
+}
 
 /* ── Filter toolbar ── */
 .admin__rv-toolbar {
@@ -734,7 +795,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.6rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.65rem;
 }
 
 .admin__rv-search-wrap {
@@ -758,27 +819,37 @@
   padding-left: 2.2rem !important;
 }
 
-.admin__rv-resource-select {
-  min-width: 180px;
+.admin__rv-resource-select,
+.admin__rv-sort-select {
+  min-width: 150px;
   flex-shrink: 0;
+}
+
+/* ── Result count line ── */
+.admin__rv-result-count {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.85rem;
 }
 
 /* ── Review cards list ── */
 .admin__rv-list {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.75rem;
 }
 
 .admin__rv-card {
-  background: var(--color-surface-2);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
+  border-left: 4px solid #ccc; /* overridden inline per rating */
   border-radius: var(--radius-lg);
   padding: 1rem 1.1rem;
-  transition: box-shadow 180ms ease;
+  transition: box-shadow 180ms ease, transform 120ms ease;
 }
 .admin__rv-card:hover {
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .admin__rv-card-header {
@@ -801,6 +872,7 @@
   color: #fff;
   flex-shrink: 0;
   letter-spacing: 0.03em;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
 }
 
 .admin__rv-meta {
@@ -838,11 +910,12 @@
   flex-shrink: 0;
 }
 
-.admin__rv-score {
-  font-size: 0.74rem;
-  color: var(--color-text-muted);
-  margin-left: 0.3rem;
-  font-weight: 600;
+.admin__rv-score-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.12rem 0.45rem;
+  border-radius: var(--radius-full);
+  margin-left: 0.4rem;
 }
 
 .admin__rv-date {
@@ -855,21 +928,26 @@
 .admin__rv-text {
   font-size: 0.85rem;
   color: var(--color-text-muted);
-  line-height: 1.55;
+  line-height: 1.6;
   margin: 0;
   padding-left: calc(36px + 0.75rem);
+  border-top: 1px dashed var(--color-border);
+  padding-top: 0.5rem;
 }
 
 /* ── Dark mode adjustments ── */
-[data-theme="dark"] .admin__rv-stat        { background: var(--color-surface-2); }
-[data-theme="dark"] .admin__rv-star-btn    { background: var(--color-surface-2); }
-[data-theme="dark"] .admin__rv-card        { background: var(--color-surface-2); }
+[data-theme="dark"] .admin__rv-pill  { background: var(--color-surface-2); }
+[data-theme="dark"] .admin__rv-dist  { background: var(--color-surface-2); }
+[data-theme="dark"] .admin__rv-card  { background: var(--color-surface); }
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
+  .admin__rv-overview    { flex-direction: column; }
+  .admin__rv-pills       { flex-direction: row; flex-wrap: wrap; }
+  .admin__rv-pill        { flex: 1; min-width: 120px; }
   .admin__rv-card-header { gap: 0.5rem; }
-  .admin__rv-text        { padding-left: 0; }
-  .admin__rv-stats       { gap: 0.6rem; }
+  .admin__rv-text        { padding-left: 0; border-top: 1px dashed var(--color-border); }
   .admin__rv-toolbar     { flex-direction: column; align-items: stretch; }
-  .admin__rv-resource-select { min-width: 0; width: 100%; }
+  .admin__rv-resource-select,
+  .admin__rv-sort-select { min-width: 0; width: 100%; }
 }

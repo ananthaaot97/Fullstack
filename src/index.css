@@ -23,9 +23,9 @@
   --color-danger-border: #fca5a5;
   --color-warning:       #f59e0b;
 
-  /* Admin sidebar (dark-on-light: intentional enterprise pattern) */
-  --color-admin-sidebar:     #1e293b;
-  --color-admin-sidebar-fg:  #94a3b8;
+  /* Admin sidebar — adapts to page theme */
+  --color-admin-sidebar:     #ffffff;
+  --color-admin-sidebar-fg:  #64748b;
 
   --radius-sm:   4px;
   --radius-md:   8px;
