@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion as Motion, useReducedMotion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import BrandLogo from '../../components/brand/BrandLogo';
+import Captcha, { useCaptcha } from '../../components/Captcha/Captcha';
 import '../Login/Auth.css';
 
 const cardVariants = {
@@ -10,12 +11,12 @@ const cardVariants = {
   visible: { transition: { staggerChildren: 0.06, delayChildren: 0.04 } },
 };
 const itemVariants = {
-  hidden:   { opacity: 0, y: 10 },
-  visible:  { opacity: 1, y: 0, transition: { duration: 0.36, ease: 'easeOut' } },
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.36, ease: 'easeOut' } },
 };
 const cardVariantsReduced = {};
 const itemVariantsReduced = {
-  hidden:  { opacity: 0 },
+  hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.15 } },
 };
 
@@ -26,6 +27,9 @@ export default function Signup() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const prefersReduced = useReducedMotion();
+  const { code: captchaCode, refresh: refreshCaptcha, verify: verifyCaptcha } = useCaptcha();
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaError, setCaptchaError] = useState('');
 
   const cv = prefersReduced ? cardVariantsReduced : cardVariants;
   const iv = prefersReduced ? itemVariantsReduced : itemVariants;
@@ -38,14 +42,29 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setCaptchaError('');
+
     if (form.password !== form.confirm) { setError('Passwords do not match'); return; }
     if (form.password.length < 6) { setError('Password must be at least 6 characters'); return; }
+
+    // Validate CAPTCHA
+    if (!verifyCaptcha(captchaInput)) {
+      setCaptchaError('Incorrect code — please try again.');
+      setCaptchaInput('');
+      refreshCaptcha();
+      return;
+    }
+
     setLoading(true);
     await new Promise(r => setTimeout(r, 600));
     const result = signup(form.name, form.email, form.password);
     setLoading(false);
     if (result.success) navigate('/dashboard');
-    else setError(result.error);
+    else {
+      setError(result.error);
+      setCaptchaInput('');
+      refreshCaptcha();
+    }
   };
 
   const pwError = error && /password/i.test(error);
@@ -102,6 +121,14 @@ export default function Signup() {
               aria-invalid={pwError || undefined}
             />
           </div>
+          <Captcha
+            code={captchaCode}
+            onRefresh={() => { refreshCaptcha(); setCaptchaInput(''); setCaptchaError(''); }}
+            value={captchaInput}
+            onChange={v => { setCaptchaInput(v); setCaptchaError(''); }}
+            error={captchaError}
+          />
+
           <button type="submit" className="btn btn--primary btn--full btn--lg" disabled={loading}>
             {loading ? 'Creating account…' : 'Create Account'}
           </button>

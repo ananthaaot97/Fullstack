@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import { useRatings } from '../../context/RatingsContext';
 import { useNavigate } from 'react-router-dom';
 import { RESOURCES, MOCK_USERS, ANALYTICS } from '../../data/mockData';
 import ResourcePreviewModal from '../../components/admin/ResourcePreviewModal';
@@ -105,6 +106,7 @@ const INITIAL_ACTIVITIES = [
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { getAvgRating, getUserReviewCount, globalStats } = useRatings();
   const toastCounter = useRef(0);
   const activityCounter = useRef(5); // starts after INITIAL_ACTIVITIES
 
@@ -372,7 +374,7 @@ export default function AdminDashboard() {
               <StatCard Icon={Users}            label="Registered Users" value={ANALYTICS.totalUsers.toLocaleString()} delta="↑ 124 this month" color="#10b981" />
               <StatCard Icon={ArrowDownToLine}  label="Total Downloads"  value={ANALYTICS.totalDownloads.toLocaleString()} delta="↑ 8,200 this month" color="#f59e0b" />
               <StatCard Icon={Layers}           label="Categories"       value={ANALYTICS.totalCategories} delta="Active" color="#8b5cf6" />
-              <StatCard Icon={Star}             label="Avg. Rating"      value="4.4" delta="Across all resources" color="#ec4899" />
+              <StatCard Icon={Star}             label="Avg. Rating"      value={globalStats.avgRating ?? '4.4'} delta={globalStats.totalUserReviews > 0 ? `${globalStats.totalUserReviews} user review${globalStats.totalUserReviews !== 1 ? 's' : ''} submitted` : 'Across all resources'} color="#ec4899" />
               <StatCard Icon={AlertCircle}      label="Pending Review"   value="3" delta="Needs attention" color="#ef4444" />
             </div>
 
@@ -407,14 +409,26 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {[...resources].sort((a, b) => b.downloads - a.downloads).slice(0, 5).map(r => (
-                    <tr key={r.id}>
-                      <td>{r.title}</td>
-                      <td><span className="cat-tag">{r.categoryLabel}</span></td>
-                      <td className="admin__td-num">{r.downloads.toLocaleString()}</td>
-                      <td><Star size={13} fill="currentColor" strokeWidth={0} aria-hidden="true" style={{ verticalAlign: 'middle', color: '#f59e0b' }} /> {r.rating}</td>
-                    </tr>
-                  ))}
+                  {[...resources].sort((a, b) => b.downloads - a.downloads).slice(0, 5).map(r => {
+                    const liveRating = getAvgRating(r.id, r.rating);
+                    const reviewCount = getUserReviewCount(r.id);
+                    return (
+                      <tr key={r.id}>
+                        <td>{r.title}</td>
+                        <td><span className="cat-tag">{r.categoryLabel}</span></td>
+                        <td className="admin__td-num">{r.downloads.toLocaleString()}</td>
+                        <td>
+                          <Star size={13} fill="currentColor" strokeWidth={0} aria-hidden="true" style={{ verticalAlign: 'middle', color: '#f59e0b' }} />{' '}
+                          {liveRating}
+                          {reviewCount > 0 && (
+                            <span style={{ marginLeft: '0.35rem', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                              ({reviewCount} new)
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -448,17 +462,18 @@ export default function AdminDashboard() {
                     <th>Author</th>
                     <th>Status</th>
                     <th>Downloads</th>
+                    <th>Rating</th>
                     <th>Uploaded</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {resLoading
-                    ? Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} cols={7} />)
+                    ? Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} cols={8} />)
                     : filteredResources.length === 0
                       ? (
                         <tr>
-                          <td colSpan={7}>
+                          <td colSpan={8}>
                             <EmptyState
                               icon={<Inbox size={28} strokeWidth={1.5} aria-hidden="true" />}
                               title="No resources found"
@@ -467,26 +482,38 @@ export default function AdminDashboard() {
                           </td>
                         </tr>
                       )
-                      : filteredResources.map(r => (
-                        <tr key={r.id}>
-                          <td>
-                            <div className="admin__table-resource">
-                              <img src={r.thumbnail} alt={r.title} className="admin__table-thumb" />
-                              <span>{r.title}</span>
-                            </div>
-                          </td>
-                          <td><span className="cat-tag">{r.categoryLabel}</span></td>
-                          <td className="admin__td-muted">{r.author}</td>
-                          <td>
-                            <span className={`admin__status-badge admin__status-badge--${r.status}`}>
-                              {r.status === 'published'
-                                ? <><CheckCircle size={11} strokeWidth={2.5} style={{ marginRight: 4 }} />Published</>
-                                : <><EyeOff size={11} strokeWidth={2} style={{ marginRight: 4 }} />Draft</>}
-                            </span>
-                          </td>
-                          <td className="admin__td-num">{r.downloads.toLocaleString()}</td>
-                          <td className="admin__td-muted">{r.uploadDate}</td>
-                          <td>
+                      : filteredResources.map(r => {
+                          const liveRating = getAvgRating(r.id, r.rating);
+                          const reviewCount = getUserReviewCount(r.id);
+                          return (
+                          <tr key={r.id}>
+                            <td>
+                              <div className="admin__table-resource">
+                                <img src={r.thumbnail} alt={r.title} className="admin__table-thumb" />
+                                <span>{r.title}</span>
+                              </div>
+                            </td>
+                            <td><span className="cat-tag">{r.categoryLabel}</span></td>
+                            <td className="admin__td-muted">{r.author}</td>
+                            <td>
+                              <span className={`admin__status-badge admin__status-badge--${r.status}`}>
+                                {r.status === 'published'
+                                  ? <><CheckCircle size={11} strokeWidth={2.5} style={{ marginRight: 4 }} />Published</>
+                                  : <><EyeOff size={11} strokeWidth={2} style={{ marginRight: 4 }} />Draft</>}
+                              </span>
+                            </td>
+                            <td className="admin__td-num">{r.downloads.toLocaleString()}</td>
+                            <td>
+                              <Star size={12} fill="currentColor" strokeWidth={0} aria-hidden="true" style={{ verticalAlign: 'middle', color: '#f59e0b', marginRight: 3 }} />
+                              {liveRating}
+                              {reviewCount > 0 && (
+                                <span style={{ marginLeft: '0.3rem', fontSize: '0.72rem', color: 'var(--color-text-muted)' }}>
+                                  +{reviewCount}
+                                </span>
+                              )}
+                            </td>
+                            <td className="admin__td-muted">{r.uploadDate}</td>
+                            <td>
                             <div className="admin__row-actions">
                               <ActionBtn
                                 Icon={Eye}
@@ -515,9 +542,10 @@ export default function AdminDashboard() {
                                 onClick={() => setConfirmDelete({ id: r.id, title: r.title })}
                               />
                             </div>
-                          </td>
-                        </tr>
-                      ))
+                            </td>
+                          </tr>
+                          );
+                        })
                   }
                 </tbody>
               </table>
