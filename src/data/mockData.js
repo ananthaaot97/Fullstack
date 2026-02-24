@@ -220,8 +220,10 @@ export const MOCK_USERS = [
   { id: 2, name: 'Rahul Verma',    email: 'rahul@example.com',   role: 'student', joined: '2024-02-20', downloads: 21, status: 'active' },
   { id: 3, name: 'Priya Nair',     email: 'priya@example.com',   role: 'faculty', joined: '2023-11-10', downloads: 85, status: 'active' },
   { id: 4, name: 'Vikram Singh',   email: 'vikram@example.com',  role: 'student', joined: '2024-03-05', downloads: 12, status: 'inactive' },
-  { id: 5, name: 'Sneha Kulkarni', email: 'sneha@example.com',   role: 'admin',   joined: '2023-08-01', downloads: 140, status: 'active' },
-];
+  { id: 5, name: 'Sneha Kulkarni', email: 'sneha@example.com',   role: 'student', joined: '2023-08-01', downloads: 140, status: 'active' },
+  { id: 6, name: 'V Sampath Kumar',    email: 'vsampathkumar@gmail.com',   role: 'admin', joined: '2023-12-15', downloads: 92, status: 'active' },
+  { id: 7, name: 'Nigga olive', email: 'ork@gmail.com',   role: 'admin',   joined: '2023-08-01', downloads: 140, status: 'active' },
+ ];
 
 export const ANALYTICS = {
   totalResources: RESOURCES.length,
